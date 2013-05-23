@@ -203,7 +203,9 @@ public class Manage_BT_Comunication {
 						alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setSpeed(Integer.parseInt(lista[4]));
 						alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setLat(dlat);
 						alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setLon(dlon);
+						alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setShow(true);
 						alertManager.addposHeavyTraffic();
+						
 						
 					}
 					//Cambiamos la ultima alerta de Vehiculo no visible
@@ -216,6 +218,7 @@ public class Manage_BT_Comunication {
 						alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setSpeed(Integer.parseInt(lista[4]));
 						alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setLat(dlat);
 						alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setLon(dlon);
+						alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setShow(true);
 						alertManager.addposNoVisibleVehicle();
 					}
 					//Cambiamos la ultima alerta de obras
@@ -232,6 +235,7 @@ public class Manage_BT_Comunication {
 						}
 						alertManager.works_Alerts[alertManager.getposWorks()].setLat(dlat);
 						alertManager.works_Alerts[alertManager.getposWorks()].setLon(dlon);
+						alertManager.works_Alerts[alertManager.getposWorks()].setShow(true);
 						alertManager.addposWorks();
 					}
 					//Cambiamos la ultima alerta de accidente en carretera
@@ -248,6 +252,7 @@ public class Manage_BT_Comunication {
 						}
 						alertManager.crashes_Alerts[alertManager.getposCrashes()].setLat(dlat);
 						alertManager.crashes_Alerts[alertManager.getposCrashes()].setLon(dlon);
+						alertManager.crashes_Alerts[alertManager.getposCrashes()].setShow(true);
 						alertManager.addPosCrashes();
 					}   
 					//Cambiamos la ultima alerta de poca visibilidad	
@@ -255,6 +260,7 @@ public class Manage_BT_Comunication {
 						alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setSeverity(Integer.parseInt(lista[4]));
 						alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLat(dlat);
 						alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLon(dlon);
+						alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setShow(true);
 						alertManager.addposLowVisibility(Integer.parseInt(lista[3]));
 					}
 					//Cambiamos la ultima alerta del estado de la carretera
@@ -267,6 +273,7 @@ public class Manage_BT_Comunication {
 						alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setSeverity(Integer.parseInt(lista[5]));
 						alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setLat(dlat);
 						alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setLon(dlon);
+						alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setShow(true);
 						alertManager.addposRoadState(Integer.parseInt(lista[3]));
 					}
 					

@@ -191,7 +191,7 @@ public googleMap(MainActivity mainActivity) {
 	}
 	
 /****************************************************************
- * @brief Dibuja todos los marcadores en el mapa
+ * @brief Dibuja todos los marcadores en el mapa 
 ************************************************************/	
 	public void addMarkersToMap(){
 
@@ -203,7 +203,7 @@ public googleMap(MainActivity mainActivity) {
 		 */	
 		for(int j=0;j<alertManager.getLowVisibility_Alerts().length;j++){
 			for(int i=0;i<alertManager.lowVisibility_Alerts[j].length;i++){
-				if((alertManager.lowVisibility_Alerts[j][i].getState())){
+				if((alertManager.lowVisibility_Alerts[j][i].getState())&&(alertManager.lowVisibility_Alerts[j][i].getShow())){
 					googleMap.addMarker(new MarkerOptions()
 					.position(new LatLng(alertManager.lowVisibility_Alerts[j][i].getLat(), alertManager.lowVisibility_Alerts[j][i].getLon()))
 					.snippet(alertManager.lowVisibility_Alerts[j][i].getIncidenceType())
@@ -216,7 +216,7 @@ public googleMap(MainActivity mainActivity) {
 		 * CRASHES MARKETS
 		 */
 		for(int i=0;i<alertManager.getCrashes_Alerts().length;i++){
-			if((alertManager.crashes_Alerts[i].getState())){
+			if((alertManager.crashes_Alerts[i].getState())&&(alertManager.crashes_Alerts[i].getShow())){
 				googleMap.addMarker(new MarkerOptions()
 				.position(new LatLng(alertManager.crashes_Alerts[i].getLat(), alertManager.crashes_Alerts[i].getLon()))
 				.snippet("Crashes")
@@ -228,7 +228,7 @@ public googleMap(MainActivity mainActivity) {
 		 * HEAVY TRAFFIC MARKETS
 		 */
 		for(int i=0;i<alertManager.getHeavytraffic_alerts().length;i++){
-			if((alertManager.heavytraffic_Alerts[i].getState())){
+			if((alertManager.heavytraffic_Alerts[i].getState())&&(alertManager.heavytraffic_Alerts[i].getShow())){
 				googleMap.addMarker(new MarkerOptions()
 				.position(new LatLng(alertManager.heavytraffic_Alerts[i].getLat(), alertManager.heavytraffic_Alerts[i].getLon()))
 				.snippet("Heavy traffic")
@@ -240,7 +240,7 @@ public googleMap(MainActivity mainActivity) {
 		 * NO VISIBLE VEHICLE MARKETS
 		 */
 		for(int i=0;i<alertManager.getNoVisibleVehicle_Alerts().length;i++){
-			if((alertManager.noVisibleVehicle_Alerts[i].getState())){
+			if((alertManager.noVisibleVehicle_Alerts[i].getState())&&(alertManager.noVisibleVehicle_Alerts[i].getShow())){
 				googleMap.addMarker(new MarkerOptions()
 				.position(new LatLng(alertManager.noVisibleVehicle_Alerts[i].getLat(), alertManager.noVisibleVehicle_Alerts[i].getLon()))
 				.snippet("Vehicle not visible")
@@ -253,7 +253,7 @@ public googleMap(MainActivity mainActivity) {
 		 */
 		for(int j=0;j<alertManager.getRoadState_Alerts().length;j++){
 			for(int i=0;i<alertManager.roadstate_Alerts[j].length;i++){
-				if((alertManager.roadstate_Alerts[j][i].getState())){
+				if((alertManager.roadstate_Alerts[j][i].getState())&&(alertManager.roadstate_Alerts[j][i].getShow())){
 					googleMap.addMarker(new MarkerOptions()
 					.position(new LatLng(alertManager.roadstate_Alerts[j][i].getLat(), alertManager.roadstate_Alerts[j][i].getLon()))
 					.snippet(alertManager.roadstate_Alerts[j][i].getIncidenceType())
@@ -266,7 +266,7 @@ public googleMap(MainActivity mainActivity) {
 		 * WORKS MARKETS
 		 */
 		for(int i=0;i<alertManager.getWorks_Alerts().length;i++){
-			if((alertManager.works_Alerts[i].getState())){
+			if((alertManager.works_Alerts[i].getState())&&(alertManager.works_Alerts[i].getShow())){
 				googleMap.addMarker(new MarkerOptions()
 				.position(new LatLng(alertManager.works_Alerts[i].getLat(), alertManager.works_Alerts[i].getLon()))
 				.snippet("Works")

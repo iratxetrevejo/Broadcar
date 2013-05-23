@@ -31,6 +31,7 @@ public class Alerts {
 	private int id=0;
 	private String key="Alert";
 	private boolean state=false;
+	private boolean show=false;
 	private double lat;
 	private double lon;
 	private int icon=R.drawable.default_alert_icon;
@@ -52,7 +53,9 @@ public class Alerts {
 	public boolean getState(){
 		return this.state;
 	}
-
+	public boolean getShow(){
+		return this.show;
+	}
 	public double getLat(){
 		return this.lat;
 	}
@@ -75,6 +78,9 @@ public class Alerts {
 	}
 	public void setState(boolean state){
 		this.state=state;
+	}
+	public void setShow(boolean show){
+		this.show=show;
 	}
 	public void setLat(double lat){
 		this.lat=lat;
