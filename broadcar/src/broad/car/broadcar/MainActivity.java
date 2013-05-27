@@ -11,8 +11,10 @@ package broad.car.broadcar;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -20,9 +22,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import broad.car.broadcar.alerts.AlertManager;
 import broad.car.broadcar.map.googleMap;
 import broad.car.broadcar.bluetooth.*;
+import broad.car.broadcar.gps.*;
 
 
 /** @addtogroup Broadcar
@@ -65,7 +69,10 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
     BluetoothChatService mChatService = null;
     //Clase encarga de gestionar el bluetooth y la conexión
     Manage_BT_Comunication manage_BT;
-    
+	//mapa de google
+	googleMap mapa;
+	//Clase encargada de la configuracion del gps	
+	gps gps;
 	/*********************************************************************
 	** 																	**
 	** GLOBAL VARIABLES 												**
@@ -79,8 +86,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	public static final int MESSAGE_WRITE = 3;
 	public static final int MESSAGE_DEVICE_NAME = 4;
 	public static final int MESSAGE_TOAST = 5;
-	//mapa de google
-	googleMap mapa;
+
     // Key names received from the BluetoothChatService Handler
 	public static final String DEVICE_NAME = "device_name";
 	public static final String TOAST = "toast";
@@ -163,9 +169,31 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
       		Intent intent_discoverable = manage_BT.set_bt_discoverable();
       	    startActivity(intent_discoverable); 
         }
-      
+        
+        //habilita el gps desde el inicio
+        gps.turnGPSOn(this);
+                 
 	}
 	
+	
+	/**********************************************************************
+	 * @brief 	Finaliza el Bluetooth y el GPS cuando se cierra la aplicacion
+	 * @par	   Logica 
+	 * 		    -	Desactiva el Bluetooth
+	 * 			-  	Desactiva el GPS
+	 * @param   
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/	
+	 protected void onDestroy()
+	    {
+	        // TODO Auto-generated method stub
+	       super.onDestroy();	      
+	       manage_BT.turnOffBT(mBluetoothAdapter);
+      	   gps.turnGPSOff(this);
+      	 
+	   }
 	
 	/**********************************************************************
 	 * @brief  Inicializa las preferencias de las alertas

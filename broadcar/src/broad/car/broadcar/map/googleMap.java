@@ -7,12 +7,16 @@
 package broad.car.broadcar.map;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
 import broad.car.broadcar.MainActivity;
 import broad.car.broadcar.R;
@@ -140,7 +144,6 @@ public googleMap(MainActivity mainActivity) {
 	 * @return
 	 * @TODO 
 	**********************************************************************/		
-
 
 	private void viewLocation(Location loc) {
     	if(loc != null)
@@ -300,5 +303,7 @@ public googleMap(MainActivity mainActivity) {
 			}
 		}	
 	}
+	
+	
 	
 }

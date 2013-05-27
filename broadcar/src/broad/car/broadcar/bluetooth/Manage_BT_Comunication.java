@@ -99,8 +99,17 @@ public class Manage_BT_Comunication {
 			 sin ningun limite de tiempo*/
 	        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 	        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);//el valor  significa que siempre este activado, sin un tiempo determinado
-	        return discoverableIntent;			
+	        return discoverableIntent;	
+	        
+	    
 	}
+	
+	
+	public void turnOffBT(android.bluetooth.BluetoothAdapter mBluetoothAdapter){
+  	    mBluetoothAdapter.disable();
+
+	}
+	
 	
 	
    /********************************************************

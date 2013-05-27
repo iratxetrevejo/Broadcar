@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 /** @addtogroup Broadcar
 *
@@ -86,7 +87,7 @@ public class BluetoothChatService {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
-
+    Context contexto;
 	
 	/**********************************************************************
 	 * @brief  Constructor. Prepares a new BluetoothChat session.
@@ -98,7 +99,8 @@ public class BluetoothChatService {
 	**********************************************************************/		
 
     public BluetoothChatService(Context context, Handler handler) {
-        mAdapter = BluetoothAdapter.getDefaultAdapter();
+    	contexto = context;
+    	mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
     }
