@@ -19,7 +19,8 @@ import android.preference.PreferenceActivity;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * @}
 */
 
@@ -31,10 +32,15 @@ public class QuickPrefsActivity extends PreferenceActivity {
 	** 																	**
 	**********************************************************************/
 	
-	
+
 	/**********************************************************************
-	 * @brief  Muestra la vista de la configuración de las alertas 
+	 * @brief   Muestra la vista de la configuración de las alertas  
+	 * @param   Bundle savedeIntanceState
+	 * @return
+	 * @TODO 
+
 	**********************************************************************/	
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -37,7 +37,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * @}
 */
 
@@ -66,11 +67,17 @@ public googleMap(MainActivity mainActivity) {
 	}
 
 
-/****************************************************************
- *  
- * @brief Situa el mapa en torno a la localización en la posición
+/**********************************************************************
+ * @brief   Situa el mapa en torno a la localización en la posición
  * en la que esta situada el dispositivo
-************************************************************/	
+ * @param  SupportMapFragment fm
+ * @param  LocationManager locationManager
+ * @param  AlertManager alertManager2 - controlador de alertas
+ * @return
+ * @TODO 
+**********************************************************************/	
+
+
 	public void init_location(SupportMapFragment fm, LocationManager locationManager, AlertManager alertManager2)
     {
 		alertManager = alertManager2;
@@ -102,11 +109,13 @@ public googleMap(MainActivity mainActivity) {
     			LocationManager.GPS_PROVIDER, 30000, 0, locListener);
     }
      
+	/**********************************************************************
+	 * @brief  Maneja los cambios en el mapa, si detecta cambio de posición
+	 * lo actualiza a la nueva
+	 * @return
+	 * @TODO 
+	**********************************************************************/		
 	
-/****************************************************************
- * @brief Maneja los cambios en el mapa, si detecta cambio de posición
- * lo actualiza a la nueva
-************************************************************/	
     private void register_forUpdates() {
     	locListener = new LocationListener() {
 	    	//si cambia de posicion
@@ -115,6 +124,7 @@ public googleMap(MainActivity mainActivity) {
     			//googleMap.clear();
     			//pinta el mapa en la nueva localización
     			viewLocation(location);
+    			
 	   	}
 	    public void onProviderDisabled(String provider){
 	   	}
@@ -124,10 +134,13 @@ public googleMap(MainActivity mainActivity) {
 	    	}
     	};		
 	}
-	
-/****************************************************************
- * @brief Dibuja el mapa en la nueva localización
-************************************************************/	
+	/**********************************************************************
+	 * @brief  Dibuja el mapa en la nueva localización
+	 * @param Location loc
+	 * @return
+	 * @TODO 
+	**********************************************************************/		
+
 
 	private void viewLocation(Location loc) {
     	if(loc != null)
@@ -165,12 +178,19 @@ public googleMap(MainActivity mainActivity) {
 	}
 	
 /****************************************************************
- * @brief Da la opción de modificar la vista del mapa
- * satellite
- * normal
- * terrain 
- * hybrid
-************************************************************/	
+
+************************************************************/
+	
+	/**********************************************************************
+	 * @brief Da la opción de modificar la vista del mapa
+	 *- satellite
+	 *- normal
+	 *- terrain 
+	 *- hybrid
+	 * @param String vista - nueva vista que se desea tener
+	 * @return
+	 * @TODO 
+	**********************************************************************/		
 	public void changeMapView(String vista)
 	{
 		
@@ -190,9 +210,14 @@ public googleMap(MainActivity mainActivity) {
 	   
 	}
 	
-/****************************************************************
- * @brief Dibuja todos los marcadores en el mapa 
-************************************************************/	
+	
+	/**********************************************************************
+	 * @brief   Dibuja todos los marcadores en el mapa 
+	 * @param 
+	 * @return
+	 * @TODO  refactorizar la funcion. Es demasiado larga
+	**********************************************************************/	
+
 	public void addMarkersToMap(){
 
 		//Limpia el mapa

@@ -20,7 +20,8 @@ import broad.car.broadcar.R;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * @}
 */
 public class Works_Alerts extends Alerts{
@@ -31,30 +32,71 @@ public class Works_Alerts extends Alerts{
 	**********************************************************************/
 	private boolean direction;
 	private boolean closedroad;
+	
+	
+	/*********************************************************************
+	** 																	**
+	** LOCAL FUNCTIONS 													**
+	** 																	**
+	**********************************************************************/
+	
 	/**********************************************************************
 	 * @brief  NoVisibleVehicle_Alerts() es el constructor de la clase.
-	 * Se encarga de : Inicializar el icono de la alerta.
-	**********************************************************************/
+	 * @par Inicializar el icono de la alerta.
+	 * @return
+	 * @TODO 
+	**********************************************************************/	
+
 	public Works_Alerts(){
 		this.setIcon(R.drawable.works_alert_icon);
 	}
+	
+	
+
 	/**********************************************************************
-	 * @brief  Getters de los datos de las alertas.
-	 * Se encarga de : recoger los valores de una alerta.
+	 *   					Getters 	
 	**********************************************************************/
+	
+	/**********************************************************************
+	 * @brief  Devuelve la direccion donde esta la alerta
+	 * @par 
+	 * @return this.direction - direccion que devuelve
+	 * @TODO 
+	**********************************************************************/	
 	public boolean getDirection(){
 		return this.direction;
 	}
+	
+	/**********************************************************************
+	 * @brief  Devuelve ClosedRoad
+	 * @par 
+	 * @return this.closedroad
+	 * @TODO 
+	**********************************************************************/	
 	public boolean getClosedRoad(){
 		return this.closedroad;
 	}
+	
+	
 	/**********************************************************************
-	 * @brief  Setters de los datos de las alertas.
-	 * Se encarga de : Cambiar los valores de una alerta.
+	 *  					 Setters 	
+	**********************************************************************/
+	
+	/**********************************************************************
+	 * @brief  Cambia el valor de la direccion
+	 * @param	boolean direction- nueva direccion 
+	 * @return 
+	 * @TODO 
 	**********************************************************************/
 	public void setDirection(boolean direction){
 		this.direction=direction;
 	}
+	/**********************************************************************
+	 * @brief  Cambia el valor de Closed Road
+	 * @param boolean closedroad 
+	 * @return
+	 * @TODO 
+	**********************************************************************/
 	public void setClosedRoad(boolean closedroad){
 		this.closedroad=closedroad;
 	}

@@ -38,11 +38,19 @@ import android.util.Log;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
+* 
 * @}
 */
 public class BluetoothChatService {
-    // Debugging
+    
+	/*********************************************************************
+	** 																	**
+	** GLOBAL VARIABLES 												**
+	** 																	**
+	**********************************************************************/
+	// Debugging
     private static final String TAG = "BluetoothChatService";
     private static final boolean D = true;
 
@@ -57,7 +65,19 @@ public class BluetoothChatService {
         UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final UUID MY_UUID_INSECURE =
         UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    
+    // Constants that indicate the current connection state
+    public static final int STATE_NONE = 0;       // we're doing nothing
+    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
+    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
+    
+	/*********************************************************************
+	** 																	**
+	** IMPORTED CLASSES / Declarations  								**
+	** 																	**
+	**********************************************************************/
     // Member fields
     private final BluetoothAdapter mAdapter;
     private final Handler mHandler;
@@ -67,27 +87,33 @@ public class BluetoothChatService {
     private ConnectedThread mConnectedThread;
     private int mState;
 
-    // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-
-    /**
-     * Constructor. Prepares a new BluetoothChat session.
-     * @param context  The UI Activity Context
+	
+	/**********************************************************************
+	 * @brief  Constructor. Prepares a new BluetoothChat session.
+	 * @param context  The UI Activity Context
      * @param handler  A Handler to send messages back to the UI Activity
-     */
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/		
+
     public BluetoothChatService(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
     }
+	
+	/**********************************************************************
+	 * @brief  Set the current state of the chat connection
+	 * @par	   Logica 
+	 * 		    -	Give the new state to the Handler so the UI Activity can update
 
-    /**
-     * Set the current state of the chat connection
-     * @param state  An integer defining the current connection state
-     */
+	 * @param state  An integer defining the current connection state
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/		
+ 
     private synchronized void setState(int state) {
         if (D) Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
@@ -95,16 +121,30 @@ public class BluetoothChatService {
         // Give the new state to the Handler so the UI Activity can update
         mHandler.obtainMessage(Manage_BT_Comunication.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
-
-    /**
-     * Return the current connection state. */
-    public synchronized int getState() {
+    
+    
+    
+	/**********************************************************************
+	 * @brief  Funcion Get que devuelve el estado 
+	 * @return the current connection state
+	 * @TODO 
+	**********************************************************************/	
+      public synchronized int getState() {
         return mState;
     }
-
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume() */
+      
+      
+  	/**********************************************************************
+  	 * @brief  Start the chat service. Specifically start AcceptThread to begin a
+     * 			session in listening (server) mode. Called by the Activity onResume()
+     * @par	   Logica 
+	 * 		    -	Cancel any thread attempting to make a connection
+	 * 			-	Cancel any thread currently running a connection
+	 * 			-	Start the thread to listen on a BluetoothServerSocket
+  	 * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+    
     public synchronized void start() {
         if (D) Log.d(TAG, "start");
 
@@ -127,10 +167,22 @@ public class BluetoothChatService {
         }
     }
 
-    /**
-     * Start the ConnectThread to initiate a connection to a remote device.
-     * @param device  The BluetoothDevice to connect
+    
+  	/**********************************************************************
+  	 * @brief  Start the ConnectThread to initiate a connection to a remote device.
+     * @par	   Logica 
+	 * 		    -	Cancel any thread attempting to make a connection
+	 * 			-	Cancel any thread currently running a connection
+	 *      	-	Start the thread to connect with the given device
+	 * 
+  	 * @param device  The BluetoothDevice to connect
      * @param secure Socket Security type - Secure (true) , Insecure (false)
+     * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+    /**
+     * 
+    
      */
     public synchronized void connect(BluetoothDevice device, boolean secure) {
         if (D) Log.d(TAG, "connect to: " + device);
@@ -149,11 +201,21 @@ public class BluetoothChatService {
         setState(STATE_CONNECTING);
     }
 
-    /**
-     * Start the ConnectedThread to begin managing a Bluetooth connection
-     * @param socket  The BluetoothSocket on which the connection was made
+    
+	/**********************************************************************
+  	 * @brief  Start the ConnectedThread to begin managing a Bluetooth connection
+     * @par	   Logica 
+	 * 		    -	Cancel the thread that completed the connection
+	 * 			-	Cancel any thread currently running a connection
+	 * 			-	Cancel the accept thread because we only want to connect to one device
+	 *      	-	Start the thread to manage the connection and perform transmissions
+	 * 			-	Send the name of the connected device back to the UI Activity
+  	 * @param socket  The BluetoothSocket on which the connection was made
      * @param device  The BluetoothDevice that has been connected
-     */
+     * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+   
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device, final String socketType) {
         if (D) Log.d(TAG, "connected, Socket Type:" + socketType);
@@ -187,10 +249,13 @@ public class BluetoothChatService {
 
         setState(STATE_CONNECTED);
     }
-
-    /**
-     * Stop all threads
-     */
+    /**********************************************************************
+  	 * @brief   Stop all threads
+     * @param 
+     * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+   
     public synchronized void stop() {
         if (D) Log.d(TAG, "stop");
 
@@ -215,12 +280,19 @@ public class BluetoothChatService {
         }
         setState(STATE_NONE);
     }
-
-    /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     * @param out The bytes to write
+    
+	/**********************************************************************
+  	 * @brief  Write to the ConnectedThread in an unsynchronized manner
+     * @par	   Logica 
+	 * 		    -	Create temporary object
+	 * 			-	Synchronize a copy of the ConnectedThread
+	 * 			-	Perform the write unsynchronized
+  	 * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
-     */
+     * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+
     public void write(byte[] out) {
         // Create temporary object
         ConnectedThread r;
@@ -233,9 +305,17 @@ public class BluetoothChatService {
         r.write(out);
     }
 
-    /**
-     * Indicate that the connection attempt failed and notify the UI Activity.
-     */
+    
+    /**********************************************************************
+  	 * @brief   Indicate that the connection attempt failed and notify the UI Activity.
+     * @par	   Logica 
+	 * 		    -	Indicate that the connection attempt failed and notify the UI Activity.
+	 * 			-	Start the service over to restart listening mode
+  	 * @param 
+     * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+   
     private void connectionFailed() {
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
@@ -248,9 +328,16 @@ public class BluetoothChatService {
         BluetoothChatService.this.start();
     }
 
-    /**
-     * Indicate that the connection was lost and notify the UI Activity.
-     */
+    /**********************************************************************
+  	 * @brief  Indicate that the connection was lost and notify the UI Activity.
+     * @par	   Logica 
+	 * 		    -	Send a failure message back to the Activity
+	 * 			-	Start the service over to restart listening mode
+  	 * @param 
+     * @return 
+  	 * @TODO 
+  	**********************************************************************/	
+   
     private void connectionLost() {
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
@@ -262,12 +349,18 @@ public class BluetoothChatService {
         // Start the service over to restart listening mode
         BluetoothChatService.this.start();
     }
-
-    /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
-     * (or until cancelled).
-     */
+    /**********************************************************************
+   	 * @brief  This thread runs while listening for incoming connections. It behaves
+     * 			like a server-side client. It runs until a connection is accepted
+     * 			(or until cancelled).
+     * @par	   Logica 
+ 	 * 		    -	The local server socket
+ 	 * 			-	Create a new listening server socket
+   	 * @param 
+     * @return 
+   	 * @TODO 
+   	**********************************************************************/	
+    
     private class AcceptThread extends Thread {
         // The local server socket
         private final BluetoothServerSocket mmServerSocket;
@@ -345,12 +438,13 @@ public class BluetoothChatService {
         }
     }
 
-
-    /**
-     * This thread runs while attempting to make an outgoing connection
-     * with a device. It runs straight through; the connection either
-     * succeeds or fails.
-     */
+    /**********************************************************************
+   	 * @brief  Get a BluetoothSocket for a connection with the given BluetoothDevice
+   	 * @param 
+     * @return 
+   	 * @TODO 
+   	**********************************************************************/	
+  
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
@@ -418,10 +512,13 @@ public class BluetoothChatService {
         }
     }
 
-    /**
-     * This thread runs during a connection with a remote device.
-     * It handles all incoming and outgoing transmissions.
-     */
+    /**********************************************************************
+   	 * @brief This thread runs during a connection with a remote device.
+     * 			It handles all incoming and outgoing transmissions.
+   	 * @param 
+     * @return 
+   	 * @TODO 
+   	**********************************************************************/	 
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -444,7 +541,19 @@ public class BluetoothChatService {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
-
+        
+        
+        /**********************************************************************
+       	 * @brief 
+       	 * @par Logica
+       	 * 		-Keep listening to the InputStream while connected
+       	 * 		-Read from the InputStream
+       	 * 		-Send the obtained bytes to the UI Activity
+       	 * 		-Start the service over to restart listening mode
+       	 * @param 
+         * @return 
+       	 * @TODO 
+       	**********************************************************************/	 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
@@ -468,9 +577,16 @@ public class BluetoothChatService {
                 }
             }
         }
-
+        /**********************************************************************
+       	 * @brief Write to the connected OutStream.
+       	 * @par Logica
+       	 * 		-Share the sent message back to the UI Activity
+       	 * @param 
+         * @return 
+       	 * @TODO 
+       	**********************************************************************/	 
         /**
-         * Write to the connected OutStream.
+         * 
          * @param buffer  The bytes to write
          */
         public void write(byte[] buffer) {
