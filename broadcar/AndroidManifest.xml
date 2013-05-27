@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme" android:debuggable="true">
         <meta-data 
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCkako_wMAzLmPX_6yLrVQSILIfeU7LcFY"/>
+            android:value="AIzaSyBtt1aQGvruItOqaNMuQP6ga19tFrO0-mw"/>
         
         <activity
             android:name="broad.car.broadcar.MainActivity"
