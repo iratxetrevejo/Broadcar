@@ -19,7 +19,8 @@ import broad.car.broadcar.R;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * @}
 */
 public class LowVisibility_Alerts extends Alerts{
@@ -40,12 +41,21 @@ public class LowVisibility_Alerts extends Alerts{
 	** 																	**
 	**********************************************************************/
 	
-	
-	/**********************************************************************
-	 * @brief  Setters de los datos de las alertas.
-	 * Se encarga de : Cambiar los valores de una alerta.
+	/*********************************************************************
+	** 																	**
+	** LOCAL FUNCTIONS 													**
+	** 																	**
 	**********************************************************************/
 	
+	/**********************************************************************
+	 * 		 			Setters 
+	**********************************************************************/
+	/**********************************************************************
+	 * @brief  Cambia el valor del tipo de accidente
+	 * @param   int j-
+	 * @return 
+	 * @TODO cambiar el nombre a la variable de entrada
+	**********************************************************************/	
 	public void setIncidencetype(int j){
 		if(j==2){
 			this.incidencetype=FOG;
@@ -58,16 +68,39 @@ public class LowVisibility_Alerts extends Alerts{
 			this.setIcon(R.drawable.heavyrain_alert_icon);
 		}
 	}
+	
+	/**********************************************************************
+	 * @brief  Cambia el valor del tipo importancia de la alerta
+	 * @param   int severity- valor nuevo para la severidad
+	 * @return 
+	 * @TODO
+	**********************************************************************/	
 	public void setSeverity(int severity){ //From 1 to 5
 		this.severity=severity;
 	}
+	
+	
 	/**********************************************************************
-	 * @brief  Getters de los datos de las alertas.
-	 * Se encarga de : recoger los valores de una alerta.
+	 *   					Getters
 	**********************************************************************/
+	
+	/**********************************************************************
+	 * @brief  Devuelve el valor del tipo de accidente
+	 * @param  
+	 * @return this.incidencetype - el valor que devuelve para el tipo de accidente
+	 * @TODO
+	**********************************************************************/	
 	public String getIncidenceType(){
 		return this.incidencetype;
 	}
+	
+	
+	/**********************************************************************
+	 * @brief  Devuelve el valor de importancia de una alerta-Severity
+	 * @param  
+	 * @return this.severity 
+	  * @TODO
+	**********************************************************************/	
 	public int getSeverity(){
 		return this.severity;
 	}

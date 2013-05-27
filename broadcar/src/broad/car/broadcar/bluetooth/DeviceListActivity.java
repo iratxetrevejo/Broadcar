@@ -45,22 +45,60 @@ import android.widget.AdapterView.OnItemClickListener;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * @}
 */
 public class DeviceListActivity extends Activity {
-    // Debugging
-    private static final String TAG = "DeviceListActivity";
-    private static final boolean D = true;
+ 
 
-    // Return Intent extra
-    public static String EXTRA_DEVICE_ADDRESS = "device_address";
-
+    /*********************************************************************
+	** 																	**
+	** IMPORTED CLASSES / Declarations  								**
+	** 																	**
+	**********************************************************************/
     // Member fields
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
+    
+	/*********************************************************************
+	** 																	**
+	** GLOBAL VARIABLES 												**
+	** 																	**
+	**********************************************************************/
+    
+    // Debugging
+    private static final String TAG = "DeviceListActivity";
+    private static final boolean D = true;
+    // Return Intent extra
+    public static String EXTRA_DEVICE_ADDRESS = "device_address";
+    
+    
+    /**********************************************************************
+	 * @brief  onCreate es la primera función que se ejecuta al inicializar 
+	 * @par	   Logica 
+	 * 		    -	Setup the window
+	 * 			-   Set result CANCELED in case the user backs out
+	 * 			-   Initialize the button to perform device discovery 
+	 * 			-   Initialize array adapters. One for already paired devices and
+     *  			one for newly discovered devices
+     *  		-	Find and set up the ListView for paired devices
+     *  		-	Find and set up the ListView for newly discovered devices
+     *  		-	Register for broadcasts when a device is discovered
+     *  		-	Register for broadcasts when discovery has finished
+     *  		-	Get the local Bluetooth adapter
+     *  		-	Get a set of currently paired devices
+     *  		-	If there are paired devices, add each one to the ArrayAdapter
+     *  
+	 * @param   Bundle savedeIntanceState
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/		
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +159,17 @@ public class DeviceListActivity extends Activity {
             mPairedDevicesArrayAdapter.add(noDevices);
         }
     }
-
+    
+    
+    /**********************************************************************
+	 * @brief  Funcion que se encarga de finalizar el bluetooth
+	 * @par	   Logica 
+	 * 		    -	Make sure we're not doing discovery anymore
+	 * 			-   Unregister broadcast listeners 
+	 * @param   
+	 * @return
+	 * @TODO 
+	**********************************************************************/		
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -135,9 +183,19 @@ public class DeviceListActivity extends Activity {
         this.unregisterReceiver(mReceiver);
     }
 
-    /**
-     * Start device discover with the BluetoothAdapter
-     */
+    
+    /**********************************************************************
+  	 * @brief  Start device discover with the BluetoothAdapter
+  	 * @par	   Logica 
+  	 * 		    -	Indicate scanning in the title
+  	 * 			-   Turn on sub-title for new devices 
+  	 * 			-	If we're already discovering, stop it
+  	 * 			-	Request discover from BluetoothAdapter
+  	 * @param  
+  	 * @return
+  	 * @TODO 
+  	**********************************************************************/	
+   
     private void doDiscovery() {
         if (D) Log.d(TAG, "doDiscovery()");
 
@@ -157,7 +215,20 @@ public class DeviceListActivity extends Activity {
         mBtAdapter.startDiscovery();
     }
 
-    // The on-click listener for all devices in the ListViews
+    
+    
+    /**********************************************************************
+  	 * @brief  The on-click listener for all devices in the ListViews
+  	 * @par	   Logica 
+  	 * 		    -	Cancel discovery because it's costly and we're about to connect
+  	 * 			-   Get the device MAC address, which is the last 17 chars in the View
+  	 * 			-	Create the result Intent and include the MAC address
+  	 * 			-	Set result and finish this Activity
+  	 * @param  
+  	 * @return
+  	 * @TODO 
+  	**********************************************************************/	
+
     private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
@@ -177,8 +248,20 @@ public class DeviceListActivity extends Activity {
         }
     };
 
-    // The BroadcastReceiver that listens for discovered devices and
-    // changes the title when discovery is finished
+    
+    /**********************************************************************
+  	 * @brief  The BroadcastReceiver that listens for discovered devices and
+  	 * 			 changes the title when discovery is finished
+  	 * @par	   Logica 
+  	 * 		    -	When discovery finds a device
+  	 * 				-   Get the BluetoothDevice object from the Intent
+  	 * 				-	If it's already paired, skip it, because it's been listed already
+  	 * 			-	 When discovery is finished, change the Activity title
+  	 * @param  
+  	 * @return
+  	 * @TODO 
+  	**********************************************************************/	
+    
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

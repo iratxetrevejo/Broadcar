@@ -1,3 +1,4 @@
+
 package broad.car.broadcar;
 
 
@@ -35,6 +36,8 @@ import broad.car.broadcar.bluetooth.*;
 * Version : v0.0
 * Date : 30/01/2013
 * Revised by : BroadCar team
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * Description : Original version.
 *
 * @}
@@ -112,11 +115,16 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	
 	
 	/**********************************************************************
-	 * @brief  onCreate es la primera función que se ejecuta al
-	 * inicializar el programa Broadcar
-	 * Se encarga de :inializar la posicion del gps en el mapa
-	 * 				  inicializar las preferencias
-	 * 				  comprobar el estado del bluetooth	 
+	 * @brief  onCreate es la primera función que se ejecuta al inicializar 
+	 * 		   el programa Broadcar
+	 * @par	   Logica 
+	 * 		    -	Inializa la posicion del gps en el mapa
+	 * 			-   Inicializa las alertas
+	 * 			-   Comprueba el estado del bluetooth	 
+	 * @param   Bundle savedeIntanceState
+	 * @return
+	 * @TODO 
+
 	**********************************************************************/		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
@@ -141,7 +149,6 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		mBluetoothAdapter.enable();
 		
-
 		manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager);
 		//manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager);
         //se comprueba el estado del bluetooth (on/off)
@@ -160,10 +167,17 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	}
 	
 	
-	/******************************************************
-	* @brief  Inicializa las preferencias de las alertas
-	*******************************************************/	
-		
+	/**********************************************************************
+	 * @brief  Inicializa las preferencias de las alertas
+	 * @par	   Logica 
+	 * 	 	    - Inicializa el listener para detectar cambios en los estados 
+	 * 			  de las alertas
+	 * 		    - Pone todas las alertas por defecto a true	 
+	 * @param   
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/
 	
 	private void preferences_init() {
 		preferencias= PreferenceManager.getDefaultSharedPreferences(this);
@@ -178,9 +192,14 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	}
 
 		
-	/*******************************************************************************
-	* @brief  Inflate the menu; this adds items to the action bar if it is present.
-	********************************************************************************/	
+	
+	/**********************************************************************
+	 * @brief  Inflate the menu; this adds items to the action bar if it is present.
+	 * @param  Menu menu- el menu para las opciones de configuracion
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -188,9 +207,17 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	}
 	
 	
-	/******************************************
-	* @brief  Gestiona los botones del menú.
-	*******************************************/	
+
+	/**********************************************************************
+	 * @brief  Gestiona los botones del menú.
+	 * @par	   Logica 
+	 * 	 	    - Comprueba que boton se a seleccionado en el menu y
+	 * 			  actúa segun la opción (bluetooth, gps o settings)
+	 * @param   MenuItem item- selección del menú
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -214,23 +241,45 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	}
 	
 
-    /*************************************************************
-	* @brief  FUNCION PARA CAMBIAR LAS CARACTERISTICAS DE LAS ALERTAS
-	**************************************************************/	
-		  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	        switch (requestCode) {
-	        case REQUEST_CONNECT_DEVICE_SECURE:
-	            // When DeviceListActivity returns with a device to connect
-	            if (resultCode == Activity.RESULT_OK) {
-	                manage_BT.connectDevice(data, true);
-	            }
-	            break;
-	        }
-	      }
+	/**********************************************************************
+	 * @brief  Gestiona que el dispositivo se conecte de forma segura mediante
+	 * 		   el bluetooth
+	 * @par	   Logica 
+	 * 	 	    - Si el requisito que recibe es para conectarse de forma segura
+	 * 			  procede a realizar la conexion.
+	 * @param   int requestCode  -peticion que recibe
+	 * @param   int resultCode   -el codigo resultante 
+	 * @param   Intent data   
+	 * @return
+	 * @TODO 
+
+	**********************************************************************/
+	  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+        case REQUEST_CONNECT_DEVICE_SECURE:
+            // When DeviceListActivity returns with a device to connect
+            if (resultCode == Activity.RESULT_OK) {
+                manage_BT.connectDevice(data, true);
+            }
+            break;
+        }
+      }
 		  
-	/*************************************************************
-	* @brief Encargada de gestionas las alertas
-	**************************************************************/	
+
+  /**********************************************************************
+	 * @brief  Encargada de gestionar las alertas
+	 * @par	   Logica 
+	 * 	 	    - Dependiendo de la key o peticion que reciba activa las
+	 * 			  recepcion de la alerta seleccionada
+	 * 			- Dibuja en el mapa las alertas activadas
+	 * @param  SharedPreferences sharedPreferences
+	 * 	@param String key - alerta a activar
+	 * @return
+	 * @TODO Esta funcion es demasiado larga. Aumenta la complejidad por
+	 * 		 lo que habría que refactorizarla.
+
+	**********************************************************************/		  
+		  
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
@@ -323,7 +372,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			maplistpref = preferencias.getString(KEY_PREF_LIST_PREF,"NORMAL");
 			mapa.changeMapView(maplistpref);
 		}
-		mapa.addMarkersToMap();
+		mapa.addMarkersToMap(); // dibuja en el mapa las alertas activadas
 	}	
 
 }

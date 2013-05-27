@@ -19,7 +19,8 @@ import broad.car.broadcar.R;
 * Date : 30/01/2013
 * Revised by : BroadCar team
 * Description : Original version.
-*
+* @author  Iratxe Trevejo
+* @author  Ibon Ortega
 * @}
 */
 public class HeavyTraffic_Alerts extends Alerts{
@@ -37,31 +38,59 @@ public class HeavyTraffic_Alerts extends Alerts{
 	** 																	**
 	**********************************************************************/
 	
-	
 	/**********************************************************************
 	 * @brief  HeavyTraffic_Alerts() es el constructor de la clase.
-	 * Se encarga de : Inicializar el icono de la alerta.
-	**********************************************************************/
+	 * @param    Inicializar el icono de la alerta.
+	 * @return 
+	 * @TODO 
+	**********************************************************************/	
 	public HeavyTraffic_Alerts(){
 		this.setIcon(R.drawable.heavytraffic_alert_icon);
 	}
+	
 	/**********************************************************************
-	 * @brief  Getters de los datos de las alertas.
-	 * Se encarga de : recoger los valores de una alerta.
+	 * 				  Getters de los datos de las alertas.
 	**********************************************************************/
+	/**********************************************************************
+	 * @brief  Devuelve el valor de la direccion
+	 * @param    this.direction-direccion de la alerta a devolver
+	 * @return 
+	 * @TODO 
+	**********************************************************************/		
+	
 	public boolean getDirection(){
 		return this.direction;
 	}
+	
+	/**********************************************************************
+	 * @brief  Devuelve el valor de la velocidad
+	 * @param    this.speed
+	 * @return 
+	 * @TODO 
+	**********************************************************************/	
 	public int getSpeed(){
 		return this.speed;
 	}
+	
+	
 	/**********************************************************************
-	 * @brief  Setters de los datos de las alertas.
-	 * Se encarga de : Cambiar los valores de una alerta.
+	 *   			Setters de los datos de las alertas.	
 	**********************************************************************/
+	/**********************************************************************
+	 * @brief  Cambia el valor de la direccion
+	 * @param    boolean direction- nueva direccion
+	 * @return 
+	 * @TODO 
+	**********************************************************************/	
 	public void setDirection(boolean direction){
 		this.direction=direction;
 	}
+	/**********************************************************************
+	 * @brief  Cambia el valor de la velocidad
+	 * @param    int speed- nueva velocidad
+	 * @return 
+	 * @TODO 
+	**********************************************************************/	
 	public void setSpeed(int speed){
 		this.speed=speed;
 	}
