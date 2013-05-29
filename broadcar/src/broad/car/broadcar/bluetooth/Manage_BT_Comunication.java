@@ -59,6 +59,10 @@ public class Manage_BT_Comunication {
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	
+	String[] lista;
+	String[] lat;
+	String[] lon;
+
 	
 	/*********************************************************************
 	** 																	**
@@ -174,16 +178,26 @@ public class Manage_BT_Comunication {
    */
 	  public void btListenerAlertChange(String readMessage) {
 		 
-		 char finalChar=readMessage.charAt(readMessage.length()-1);
 		 String temp="";
+		 String mensajeLimpio = "";
+		 char caracter;
+		 
+		 for (int i=0;i<readMessage.length();i++){
+				caracter = readMessage.charAt(i);
+				if (caracter!=' '){					 
+					mensajeLimpio=mensajeLimpio.concat(Character.toString(caracter));				
+				}
+		 }
+		 char finalChar=mensajeLimpio.charAt(mensajeLimpio.length()-1);
+
 		  if(finalChar!='$'){
-			  BT_in_message=BT_in_message.concat(readMessage);
+			  BT_in_message=mensajeLimpio.concat(mensajeLimpio);
 			  //concat Alerta
 		  }else{
 			  //concat Alerta
-			  BT_in_message=BT_in_message.concat(readMessage);
+			  BT_in_message=BT_in_message.concat(mensajeLimpio);
 			  temp=BT_in_message.substring(0, BT_in_message.length()-1);			  
-			  alert_Info_Update(temp);
+			  alert_Info_Update(temp,readMessage);
 			  BT_in_message="";
 		  }
 	  }
@@ -199,48 +213,157 @@ public class Manage_BT_Comunication {
 	   * @author Ibon Ortega
 	   * @date 	2013-02-26 
 	   */
-	public void alert_Info_Update(String readMessage){
+	public void alert_Info_Update(String readMessage,String readMessageCompleto){
 		//NORTE/SUR =0/1 (mirar +/-) 
 		//este/oeste =2/3 (mirar +/-) 
 		//los grados igual + minutos/60 + segundos/3600
 	  // Creamos unos string donde almacenaremos los trozos separados.
-		String[] lista;
+		
+		init_arrays();		
+		Double dlat=0.0,dlon=0.0;
+		int cont_barras;
+		
+		String cadenaEntrante = readMessage;		
+		cont_barras=check_tamTrama(cadenaEntrante);//comprobar si hay 4 o 5 barras, si las hay esta bien, sino el mensaje es erroneo
+		
+		if (cont_barras!=4 && cont_barras!=5){
+			Toast.makeText(main.getApplicationContext(), "Mensaje erroneo", Toast.LENGTH_SHORT).show();
+		}else{						
+			lista = cadenaEntrante.split("/");//Separamos el string grande que se recibe.
+			
+			int contTamLat=0;			
+			contTamLat = check_latLong(lista);// comprobar si en la latitud hay cuatro caracteres, si no esta mal mensaje erroneo
+						
+			if (contTamLat!=3){
+		        Toast.makeText(main.getApplicationContext(), "Mensaje erroneo-latitud incorrecta", Toast.LENGTH_SHORT).show();
+			}else{				
+				lat = lista[1].split("\\.");
+				
+				int contTamLon=0;//comprobar si la longitud tiene el tamaño correcto		
+				contTamLon = check_lonLong(lista);						
+				if (contTamLon!=3){
+			        Toast.makeText(main.getApplicationContext(), "Mensaje erroneo-longitud incorrecta", Toast.LENGTH_SHORT).show();
+				}else{
+					lon = lista[2].split("\\.");//Separamos los string mas pequeños (Lat y Long)
+					//convertimos los grados, minutos y segundos a grados para que google maps los interprete
+					dlat=Double.parseDouble(lat[1])+(Double.parseDouble(lat[2])/60)+(Double.parseDouble(lat[3])/3600);
+					dlon=Double.parseDouble(lon[1])+(Double.parseDouble(lon[2])/60)+(Double.parseDouble(lon[3])/3600);
+					//Si el primer numero es 1 o 3 la lat y lon seran negativas.
+					if(lat[0].equals("1")){
+						dlat=0-dlat;
+					}
+					if(lon[0].equals("3")){
+						dlon=0-dlon;
+					}
+					all_Alerts_Update(lista,dlat,dlon);	//Actualizamos el la informacion de los arrays.
+				}
+			}			
+		}		
+	}
+	/**********************************************************************
+	 * @brief  Funcion que se encarga de inicializar los array que guardarán el mensaje
+	 * 			entrante , la longitud y la latitud 
+	 * @param 
+	 * @return
+	 * @TODO 
+	**********************************************************************/
+	public void init_arrays(){
+		
 		lista= new String[6];
 		for(int i=0;i<lista.length;i++){
 			lista[i]=new String();
 		}
-		String[] lat;
+		
 		lat=new String[4];
 		for(int i=0;i<lat.length;i++){
 			lat[i]=new String();
 		}
-		String[] lon;
 		lon=new String[4];
 		for(int i=0;i<lon.length;i++){
 			lon[i]=new String();
 		}
-		Double dlat=0.0;
-		Double dlon=0.0;
-		String cadena = readMessage;
-		//Separamos el string grande que se recibe.
-		lista = cadena.split("/");
-		//Separamos los string mas pequeños (Lat y Long)
-		lat = lista[1].split("\\.");
-		lon = lista[2].split("\\.");
-		//convertimos los grados, minutos y segundos a grados para que google maps los interprete
-		dlat=Double.parseDouble(lat[1])+(Double.parseDouble(lat[2])/60)+(Double.parseDouble(lat[3])/3600);
-		dlon=Double.parseDouble(lon[1])+(Double.parseDouble(lon[2])/60)+(Double.parseDouble(lon[3])/3600);
-		//Si el primer numero es 1 o 3 la lat y lon seran negativas.
-		if(lon[0].equals("1")){
-			dlat=0-dlat;
-		}
-		if(lon[0].equals("3")){
-			dlon=0-dlon;
-		}
-		//Actualizamos el la informacion de los arrays.
-		all_Alerts_Update(lista,dlat,dlon);
-		
 	}
+	/**********************************************************************
+	 * @brief  Esta funcion se encarga de comprobar que la longitud que se
+	 * 			ha recibido para la alerta tiene el tamaño adecuado.
+	 * 			La longitud seran cuatro numeros divididos por 3 puntos. Ejem: 5.36.5.4
+	 * 			Si no tiene tres puntos sera un longitud incorrecta 
+	 * @par	   Logica 
+	 * 		    - recorre el dato de la longitud y calcula el numero de puntos que tiene.	 
+	 * @param   String[] lista- contiene el mensaje recibido, y en la posicion 2 concretamente
+	 * 			el dato para la longitud
+	 * @return cont_lista2- el numero de puntos que tiene el dato de la longitud
+	 * @TODO 
+	**********************************************************************/
+	public int  check_lonLong(String[] lista){
+		int cont_lista2=0;
+		String listaLon = lista[2];
+		char caracterLon;
+
+		for (int i=0;i<listaLon.length();i++){
+			caracterLon=listaLon.charAt(i);
+			if (caracterLon=='.'){
+				cont_lista2++;
+			}
+		}
+		
+		return cont_lista2;
+	}
+	
+	
+	/**********************************************************************
+	 * @brief  Esta funcion se encarga de comprobar que la latitud que se
+	 * 			ha recibido para la alerta tiene el tamaño adecuado.
+	 * 			La latitud seran cuatro numeros divididos por 3 puntos. Ejem: 5.36.5.4
+	 * 			Si no tiene tres puntos sera una latitud incorrecta 
+	 * @par	   Logica 
+	 * 		    - recorre el dato de la latitud y calcula el numero de puntos que tiene.	 
+	 * @param   String[] lista- contiene el mensaje recibido, y en la posicion 1 concretamente
+	 * 			el dato para la latitud
+	 * @return cont_lista1- el numero de puntos que tiene el dato de la latitud
+	 * @TODO 
+	**********************************************************************/
+	public int check_latLong(String[] lista){
+		
+		int cont_lista1=0;
+		String listaLat = lista[1];
+		char caracter;
+
+		for (int i=0;i<listaLat.length();i++){
+			caracter=listaLat.charAt(i);
+			if (caracter=='.'){
+				cont_lista1++;
+			}
+		}
+		return cont_lista1;
+	}
+	
+	
+	/**********************************************************************
+	 * @brief  Esta funcion se encarga de calcular la cantidad de barras que tiene el
+	 * 			mensaje que recibe.Para que el mensaje sea correcto tiene que tener 4 o 5 barras.
+	 * @par	   Logica 
+	 * 		    - recorre el mensaje entrante caracter a caracter	 
+	 * @param   String cadenaEntrante- el mensaje entrante por el bluetooth
+	 * @return contador_barras-el numero de barras que tiene el mensaje
+	 * @TODO 
+	**********************************************************************/
+	
+	
+	public int check_tamTrama(String cadenaEntrante){
+		char finalChar;
+		int contador_barras=0;
+
+		for (int i=0;i<(cadenaEntrante.length());i++){
+			finalChar=cadenaEntrante.charAt(i);
+			if (finalChar=='/'){
+				contador_barras++;
+			}			
+		}
+	return contador_barras;
+	}
+	
+	
 	  /**
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para dibujar los marcadores en el mapa.
@@ -253,8 +376,7 @@ public class Manage_BT_Comunication {
 	public void all_Alerts_Update(String[] lista,Double dlat, Double dlon)
 	{
 		//Cambiamos la ultima alerta de trafico denso
-		heavytraffic_Alerts_markUpdate(lista,dlat,dlon);
-		
+		heavytraffic_Alerts_markUpdate(lista,dlat,dlon);		
 		//Cambiamos la ultima alerta de Vehiculo no visible
 		noVisibleVehicle_Alerts_Update(lista,dlat,dlon);
 		//Cambiamos la ultima alerta de obras

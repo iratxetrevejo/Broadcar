@@ -118,8 +118,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	** LOCAL FUNCTIONS 													**
 	** 																	**
 	**********************************************************************/
-	
-	
+		
 	/**********************************************************************
 	 * @brief  onCreate es la primera función que se ejecuta al inicializar 
 	 * 		   el programa Broadcar
@@ -130,7 +129,6 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	 * @param   Bundle savedeIntanceState
 	 * @return
 	 * @TODO 
-
 	**********************************************************************/		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
