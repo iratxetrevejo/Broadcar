@@ -105,7 +105,7 @@ public class Manage_BT_Comunication {
 	        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);//el valor  significa que siempre este activado, sin un tiempo determinado
 	        return discoverableIntent;	
 	        
-	    
+	
 	}
 	
 	
@@ -157,7 +157,6 @@ public class Manage_BT_Comunication {
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
-                Toast.makeText(main.getApplicationContext(), readMessage, Toast.LENGTH_SHORT).show();
                 //FUNCION PARA CAMBIAR LAS CARACTERISTICAS DE LAS ALERTAS.
                 btListenerAlertChange(readMessage);
                 break;
@@ -179,15 +178,22 @@ public class Manage_BT_Comunication {
 	  public void btListenerAlertChange(String readMessage) {
 		 
 		 String temp="";
-		 String mensajeLimpio = "";
+		 String mensajeLimpio = "";//sin espacios
 		 char caracter;
+		 int cont_spaces=0;
 		 
 		 for (int i=0;i<readMessage.length();i++){
 				caracter = readMessage.charAt(i);
-				if (caracter!=' '){					 
+				if (caracter!=' '){	
 					mensajeLimpio=mensajeLimpio.concat(Character.toString(caracter));				
 				}
+				if (caracter==' '){	//para comprobar la cantidad de espacios. Puede que un mensaje solo sean espacios
+					cont_spaces++;				
+				}
 		 }
+		 if(cont_spaces==readMessage.length()){//si el mensaje son todo espacios no se sige, muestra un dialog
+		        Toast.makeText(main.getApplicationContext(), "TODO ESPACIOS", Toast.LENGTH_SHORT).show();
+		 }else{//el mensaje contiene algo mas aparte de espacios
 		 char finalChar=mensajeLimpio.charAt(mensajeLimpio.length()-1);
 
 		  if(finalChar!='$'){
@@ -196,9 +202,12 @@ public class Manage_BT_Comunication {
 		  }else{
 			  //concat Alerta
 			  BT_in_message=BT_in_message.concat(mensajeLimpio);
-			  temp=BT_in_message.substring(0, BT_in_message.length()-1);			  
+			  temp=BT_in_message.substring(0, BT_in_message.length()-1);	
+              Toast.makeText(main.getApplicationContext(), readMessage, Toast.LENGTH_SHORT).show();
 			  alert_Info_Update(temp,readMessage);
 			  BT_in_message="";
+
+		  }
 		  }
 	  }
 	  /**
@@ -224,6 +233,7 @@ public class Manage_BT_Comunication {
 		int cont_barras;
 		
 		String cadenaEntrante = readMessage;		
+	
 		cont_barras=check_tamTrama(cadenaEntrante);//comprobar si hay 4 o 5 barras, si las hay esta bien, sino el mensaje es erroneo
 		
 		if (cont_barras!=4 && cont_barras!=5){
