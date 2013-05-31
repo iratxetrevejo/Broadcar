@@ -44,7 +44,7 @@
         <activity android:name="broad.car.broadcar.QuickPrefsActivity" android:label="@string/app_name">
         </activity>
         <activity android:name="broad.car.broadcar.bluetooth.DeviceListActivity"></activity>
-
+		<activity android:name="broad.car.broadcar.tts.AndroidTextToSpeech"></activity>
         
     </application>
 

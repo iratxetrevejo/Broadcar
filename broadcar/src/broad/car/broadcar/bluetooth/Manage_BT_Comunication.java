@@ -10,11 +10,14 @@ import broad.car.broadcar.MainActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 import broad.car.broadcar.alerts.AlertManager;
 import broad.car.broadcar.bluetooth.DeviceListActivity;
+import broad.car.broadcar.tts.AndroidTextToSpeech;
 
 
 /** @addtogroup Broadcar
@@ -47,9 +50,11 @@ public class Manage_BT_Comunication {
 	BluetoothChatService ChatService;
 	// Gestor de las alertas
 	AlertManager alertManager;
-	
+	AndroidTextToSpeech ttspeech;
 	//String que almacena el mensaje recibido
 	String BT_in_message="";
+	
+	SharedPreferences preferencesButtons;
 	/*********************************************************************
 	** 																	**
 	** GLOBAL VARIABLES 												**
@@ -62,20 +67,37 @@ public class Manage_BT_Comunication {
 	String[] lista;
 	String[] lat;
 	String[] lon;
-
+	TextToSpeech speech;
+	int queue;
+	
+	public static final String KEY_PREF_HEAVY_TRAFFIC="heavy_traffic_pref";
+	public static final String KEY_PREF_LOW_VISIBILITY="low_visibility_pref";
+	public static final String KEY_PREF_ROAD_STATE="road_state_pref";
+	public static final String KEY_PREF_CRASHES="crashes_pref";
+	public static final String KEY_PREF_WORKS="work_pref";	
+	public static final String KEY_PREF_VEHICLE_NO_VISIBLE="vehicle_no_visible_pref";
 	
 	/*********************************************************************
 	** 																	**
 	** CONSTRUCTOR      												**
 	** 																	*
+	 * @param mTts 
+	 * @param queueFlush 
+	 * @param tts 
+	 * @param preferencias 
 	 * @param alertManager *
 	**********************************************************************/
-	public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1) {
+	//public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1) {
+
+		public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1, TextToSpeech mTts, int queueFlush, AndroidTextToSpeech tts, SharedPreferences preferencias) {
 		//inicializar 
 		main=mainActivity;
 		BluetoothAdapter=mBluetoothAdapter;
 		alertManager=alertManager1;
-		
+		speech=mTts;
+		queue=queueFlush;
+		ttspeech=tts;
+		preferencesButtons=preferencias;
 	}
 
 
@@ -408,8 +430,14 @@ public class Manage_BT_Comunication {
 	   * @date 	2013-02-26 
 	   */			
 	public void heavytraffic_Alerts_markUpdate(String[] lista,Double dlat, Double dlon) {
+		
 		//Cambiamos la ultima alerta de trafico denso
 		if(lista[0].equals("0")){
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_HEAVY_TRAFFIC, true);
+			if (state==true){
+				ttspeech.HeavyTraffic();
+			}
+
 			if(lista[3].equals("1")){
 				alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setDirection(true);
 			}else{
@@ -421,6 +449,8 @@ public class Manage_BT_Comunication {
 			alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setShow(true);
 			alertManager.addposHeavyTraffic();	
 		}
+		 
+	
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -433,6 +463,10 @@ public class Manage_BT_Comunication {
 	   */			
 	public void noVisibleVehicle_Alerts_Update(String[] lista,Double dlat, Double dlon) {
 		if(lista[0].equals("2")){
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_VEHICLE_NO_VISIBLE, true);
+			if (state==true){
+				ttspeech.VehicleNoVisible();
+			}
 			if(lista[3].equals("1")){
 				alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setDirection(true);
 			}else{
@@ -444,6 +478,8 @@ public class Manage_BT_Comunication {
 			alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setShow(true);
 			alertManager.addposNoVisibleVehicle();
 		}
+	
+
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -456,6 +492,10 @@ public class Manage_BT_Comunication {
 	   */
 	public void works_Alerts_Update(String[] lista,Double dlat, Double dlon) {
 		if(lista[0].equals("1")){ 
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_WORKS, true);
+			if (state==true){
+				ttspeech.WorksOnRoad();
+			}
 			if(lista[3].equals("1")){
 				alertManager.works_Alerts[alertManager.getposWorks()].setDirection(true);
 			}else{
@@ -471,6 +511,7 @@ public class Manage_BT_Comunication {
 			alertManager.works_Alerts[alertManager.getposWorks()].setShow(true);
 			alertManager.addposWorks();
 		}
+	
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -483,6 +524,10 @@ public class Manage_BT_Comunication {
 	   */	
 	public void crashes_Alerts_Update(String[] lista,Double dlat, Double dlon) {
 		if(lista[0].equals("5")){ 
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_CRASHES, true);
+			if (state==true){
+				ttspeech.Crashes();
+			}
 			if(lista[3].equals("1")){
 				alertManager.crashes_Alerts[alertManager.getposCrashes()].setDirection(true);
 			}else{
@@ -498,6 +543,7 @@ public class Manage_BT_Comunication {
 			alertManager.crashes_Alerts[alertManager.getposCrashes()].setShow(true);
 			alertManager.addPosCrashes();
 		}   
+	
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -510,12 +556,17 @@ public class Manage_BT_Comunication {
 	   */
 	public void lowVisibility_Alerts_Update(String[] lista,Double dlat, Double dlon) {
 		if(lista[0].equals("3")){  
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_LOW_VISIBILITY, true);
+			if (state==true){
+				ttspeech.LowVisibility();
+			}
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setSeverity(Integer.parseInt(lista[4]));
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLat(dlat);
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLon(dlon);
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setShow(true);
 			alertManager.addposLowVisibility(Integer.parseInt(lista[3]));
 		}
+	
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -528,6 +579,10 @@ public class Manage_BT_Comunication {
 	   */	
 	public void roadstate_Alerts_Update(String[] lista,Double dlat, Double dlon) {
 		if(lista[0].equals("4")){
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_ROAD_STATE, true);
+			if (state==true){
+				ttspeech.Roadstate();
+			}
 			if(lista[4].equals("1")){
 				alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setDirection(true);
 			}else{
@@ -539,6 +594,7 @@ public class Manage_BT_Comunication {
 			alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setShow(true);
 			alertManager.addposRoadState(Integer.parseInt(lista[3]));
 		}	
+	
 	}
 		
 /*********************************************************************
