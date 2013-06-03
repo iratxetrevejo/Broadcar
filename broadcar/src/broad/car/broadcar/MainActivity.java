@@ -8,15 +8,12 @@ package broad.car.broadcar;
 ** 																	**
 **********************************************************************/
 
-import java.util.Locale;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -25,7 +22,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import broad.car.broadcar.alerts.AlertManager;
-import broad.car.broadcar.map.googleMap;
+import broad.car.broadcar.map.*;
 import broad.car.broadcar.tts.*;
 import broad.car.broadcar.bluetooth.*;
 import broad.car.broadcar.gps.*;
@@ -75,6 +72,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	googleMap mapa;
 	//Clase encargada de la configuracion del gps	
 	gps gps;
+	//calcula la direccion en la que a ocurrido la alerta
+	getLocation alertAddress;
+	//la voz
 	AndroidTextToSpeech tts;
 	/*********************************************************************
 	** 																	**
@@ -140,12 +140,12 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		//Crea los objetos de las clases AlertManager y googleMap
 		alertManager=new AlertManager();
 		mapa=new googleMap(this);
+		//start de getLocation class-Get the address of a lon-alt
+		alertAddress=new getLocation(this.getApplicationContext());
 
-
-	 //START THE TTS
-		tts= new AndroidTextToSpeech();
+		//START THE TTS
+		tts= new AndroidTextToSpeech(alertAddress);
 		tts.start(this.getApplicationContext());
-		
 		
 		//related to the map
 		// Getting reference to the SupportMapFragment of activity_main.xml		
@@ -157,16 +157,13 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
         
 		//Se inicializan los estados de las alertas( default:true)
 		preferences_init();	
-		//mTts=tts.getMtts();
 		//Obtiene el adaptador del bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		mBluetoothAdapter.enable();
 		
-		manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,tts.getMtts(),tts.getQueue(),tts,preferencias);//////////////////////////////////////
+		manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,tts.getMtts(),tts.getQueue(),tts,preferencias);
 
-		//manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,mTts,TextToSpeech.QUEUE_FLUSH);
-		//manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager);
-        //se comprueba el estado del bluetooth (on/off)
+	    //se comprueba el estado del bluetooth (on/off)
         manage_BT.check_BluetoothStatus();	
         //pasa el mChatChatService a la case Manage_BT_Comunication
         manage_BT.setChatService(mChatService);
@@ -300,18 +297,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
             }
             break;
         }
-    /* if (requestCode == MY_DATA_CHECK_CODE) {
-	        if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-	            // success, create the TTS instance
-	            mTts = new TextToSpeech(this, this);
-	        } else {
-	            // missing data, install it
-	            Intent installIntent = new Intent();
-	            installIntent.setAction(
-	                TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-	            startActivity(installIntent);
-	        }
-	    }*/
+   
       }
 		  
 
@@ -425,23 +411,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	}
 
 
-//@Override
-/*public void onInit(int status) {
 
-	// TODO Auto-generated method stub
-	mTts.setLanguage(Locale.US);
-
-	String myText1 = "Wellcome to the broadcar application";
-	mTts.speak(myText1, TextToSpeech.QUEUE_FLUSH, null);
-}
-*/
-
-public void HeavyTraffic() {
-
-
-	String myText1 = "Heavy traffic";
-	mTts.speak(myText1, TextToSpeech.QUEUE_FLUSH, null);
-}
 
 
 }

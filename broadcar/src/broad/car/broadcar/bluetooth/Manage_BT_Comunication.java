@@ -6,6 +6,7 @@
 **********************************************************************/
 package broad.car.broadcar.bluetooth;
 
+import java.io.IOException;
 import broad.car.broadcar.MainActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -85,6 +86,7 @@ public class Manage_BT_Comunication {
 	 * @param queueFlush 
 	 * @param tts 
 	 * @param preferencias 
+	 * @param  
 	 * @param alertManager *
 	**********************************************************************/
 	//public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1) {
@@ -180,7 +182,15 @@ public class Manage_BT_Comunication {
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 //FUNCION PARA CAMBIAR LAS CARACTERISTICAS DE LAS ALERTAS.
-                btListenerAlertChange(readMessage);
+                try {
+					btListenerAlertChange(readMessage);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 break;
             }
         }
@@ -195,9 +205,11 @@ public class Manage_BT_Comunication {
    *	 		- Recoje lo recibido por bluetooth y lo almacena en un array.
    * @author Iratxe Trevejo
    * @author Ibon Ortega
+ * @throws IOException 
+ * @throws InterruptedException 
    * @date 	2013-02-26 
    */
-	  public void btListenerAlertChange(String readMessage) {
+	  public void btListenerAlertChange(String readMessage) throws IOException, InterruptedException {
 		 
 		 String temp="";
 		 String mensajeLimpio = "";//sin espacios
@@ -242,9 +254,11 @@ public class Manage_BT_Comunication {
 	   *			- Actualiza los datos.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	   * @date 	2013-02-26 
 	   */
-	public void alert_Info_Update(String readMessage,String readMessageCompleto){
+	public void alert_Info_Update(String readMessage,String readMessageCompleto) throws IOException, InterruptedException{
 		//NORTE/SUR =0/1 (mirar +/-) 
 		//este/oeste =2/3 (mirar +/-) 
 		//los grados igual + minutos/60 + segundos/3600
@@ -403,9 +417,11 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza todos los arrays noVisibleVehicle_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	   * @date 	2013-02-26 
 	   */
-	public void all_Alerts_Update(String[] lista,Double dlat, Double dlon)
+	public void all_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException, InterruptedException
 	{
 		//Cambiamos la ultima alerta de trafico denso
 		heavytraffic_Alerts_markUpdate(lista,dlat,dlon);		
@@ -427,15 +443,17 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza los marcadores del array de heavytraffic_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	   * @date 	2013-02-26 
 	   */			
-	public void heavytraffic_Alerts_markUpdate(String[] lista,Double dlat, Double dlon) {
+	public void heavytraffic_Alerts_markUpdate(String[] lista,Double dlat, Double dlon) throws IOException, InterruptedException {
 		
 		//Cambiamos la ultima alerta de trafico denso
 		if(lista[0].equals("0")){
 			boolean state = preferencesButtons.getBoolean(KEY_PREF_HEAVY_TRAFFIC, true);
 			if (state==true){
-				ttspeech.HeavyTraffic();
+				ttspeech.HeavyTraffic(dlat, dlon);			
 			}
 
 			if(lista[3].equals("1")){
@@ -448,9 +466,7 @@ public class Manage_BT_Comunication {
 			alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setLon(dlon);
 			alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setShow(true);
 			alertManager.addposHeavyTraffic();	
-		}
-		 
-	
+		}	
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -459,13 +475,14 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza los marcadores del array de noVisibleVehicle_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
 	   * @date 	2013-02-26 
 	   */			
-	public void noVisibleVehicle_Alerts_Update(String[] lista,Double dlat, Double dlon) {
+	public void noVisibleVehicle_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("2")){
 			boolean state = preferencesButtons.getBoolean(KEY_PREF_VEHICLE_NO_VISIBLE, true);
 			if (state==true){
-				ttspeech.VehicleNoVisible();
+				ttspeech.VehicleNoVisible(dlat, dlon);
 			}
 			if(lista[3].equals("1")){
 				alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setDirection(true);
@@ -478,8 +495,6 @@ public class Manage_BT_Comunication {
 			alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setShow(true);
 			alertManager.addposNoVisibleVehicle();
 		}
-	
-
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -488,13 +503,14 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza los marcadores del array de works_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
 	   * @date 	2013-02-26 
 	   */
-	public void works_Alerts_Update(String[] lista,Double dlat, Double dlon) {
+	public void works_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("1")){ 
 			boolean state = preferencesButtons.getBoolean(KEY_PREF_WORKS, true);
 			if (state==true){
-				ttspeech.WorksOnRoad();
+				ttspeech.WorksOnRoad(dlat, dlon);
 			}
 			if(lista[3].equals("1")){
 				alertManager.works_Alerts[alertManager.getposWorks()].setDirection(true);
@@ -520,13 +536,14 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza los marcadores del array de crashes_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
 	   * @date 	2013-02-26 
 	   */	
-	public void crashes_Alerts_Update(String[] lista,Double dlat, Double dlon) {
+	public void crashes_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("5")){ 
 			boolean state = preferencesButtons.getBoolean(KEY_PREF_CRASHES, true);
 			if (state==true){
-				ttspeech.Crashes();
+				ttspeech.Crashes(dlat, dlon);
 			}
 			if(lista[3].equals("1")){
 				alertManager.crashes_Alerts[alertManager.getposCrashes()].setDirection(true);
@@ -552,13 +569,14 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza los marcadores del array de lowVisibility_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	   * @throws IOException 
 	   * @date 	2013-02-26 
 	   */
-	public void lowVisibility_Alerts_Update(String[] lista,Double dlat, Double dlon) {
+	public void lowVisibility_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("3")){  
 			boolean state = preferencesButtons.getBoolean(KEY_PREF_LOW_VISIBILITY, true);
 			if (state==true){
-				ttspeech.LowVisibility();
+				ttspeech.LowVisibility(dlat, dlon);
 			}
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setSeverity(Integer.parseInt(lista[4]));
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLat(dlat);
@@ -575,13 +593,14 @@ public class Manage_BT_Comunication {
 	   *	 		- Actualiza los marcadores del array de roadstate_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
+	 * @throws IOException 
 	   * @date 	2013-02-26 
 	   */	
-	public void roadstate_Alerts_Update(String[] lista,Double dlat, Double dlon) {
+	public void roadstate_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("4")){
 			boolean state = preferencesButtons.getBoolean(KEY_PREF_ROAD_STATE, true);
 			if (state==true){
-				ttspeech.Roadstate();
+				ttspeech.Roadstate(dlat, dlon);
 			}
 			if(lista[4].equals("1")){
 				alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setDirection(true);

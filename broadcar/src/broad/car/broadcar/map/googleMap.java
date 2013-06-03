@@ -7,19 +7,13 @@
 package broad.car.broadcar.map;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.widget.Toast;
 import broad.car.broadcar.MainActivity;
-import broad.car.broadcar.R;
 import broad.car.broadcar.alerts.AlertManager;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -263,6 +257,7 @@ public googleMap(MainActivity mainActivity) {
 				.icon(BitmapDescriptorFactory.fromResource(alertManager.heavytraffic_Alerts[i].getIcon()))
 				.title(alertManager.heavytraffic_Alerts[i].getKey()));
 			}
+			
 		}	
 		/**
 		 * NO VISIBLE VEHICLE MARKETS
@@ -303,7 +298,6 @@ public googleMap(MainActivity mainActivity) {
 			}
 		}	
 	}
-	
 	
 	
 }

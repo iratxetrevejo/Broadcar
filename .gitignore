@@ -1,3 +1,6 @@
+project.properties
+AndroidManifest.xml
+
 # built application files
 *.apk
 *.ap_
