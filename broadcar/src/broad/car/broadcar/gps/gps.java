@@ -5,9 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 
-public class gps {
+public class Gps {
 	
-	
+
+	/**********************************************************************
+	 * @brief  Desactiva el gps
+	 * @param   Context context- contexto de la aplicacion
+	 * @return
+	 * @TODO 
+
+	 **********************************************************************/
 	public static void turnGPSOff(Context context){
         String provider = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
  
@@ -19,7 +26,14 @@ public class gps {
             context.sendBroadcast(poke);
         }
     } 
-	
+
+	/**********************************************************************
+	 * @brief  Activa el gps
+	 * @param   Context context- contexto de la aplicacion
+	 * @return
+	 * @TODO 
+
+	 **********************************************************************/
 	
 	public static void turnGPSOn(Context context){
 	

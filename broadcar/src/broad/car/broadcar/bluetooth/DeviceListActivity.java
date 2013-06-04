@@ -70,10 +70,10 @@ public class DeviceListActivity extends Activity {
 	**********************************************************************/
     
     // Debugging
-    private static final String TAG = "DeviceListActivity";
+    private String TAG;
     private static final boolean D = true;
     // Return Intent extra
-    public static String EXTRA_DEVICE_ADDRESS = "device_address";
+    public static String EXTRA_DEVICE_ADDRESS;
     
     
     /**********************************************************************
@@ -102,7 +102,8 @@ public class DeviceListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EXTRA_DEVICE_ADDRESS=getResources().getText(R.string.EXTRA_DEVICE_ADDRESS).toString();
+        TAG=getResources().getText(R.string.TAG).toString();
         // Setup the window
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.device_list);

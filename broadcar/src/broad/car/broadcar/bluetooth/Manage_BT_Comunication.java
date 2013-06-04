@@ -8,13 +8,13 @@ package broad.car.broadcar.bluetooth;
 
 import java.io.IOException;
 import broad.car.broadcar.MainActivity;
+import broad.car.broadcar.R;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 import broad.car.broadcar.alerts.AlertManager;
 import broad.car.broadcar.bluetooth.DeviceListActivity;
@@ -51,10 +51,9 @@ public class Manage_BT_Comunication {
 	BluetoothChatService ChatService;
 	// Gestor de las alertas
 	AlertManager alertManager;
+	//encargado de la voz
 	AndroidTextToSpeech ttspeech;
-	//String que almacena el mensaje recibido
-	String BT_in_message="";
-	
+		
 	SharedPreferences preferencesButtons;
 	/*********************************************************************
 	** 																	**
@@ -64,19 +63,18 @@ public class Manage_BT_Comunication {
 	// Message types sent from the BluetoothChatService Handler
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
+
+	public String BT_in_message="";
+	public String[] lista;
+	public String[] lat;
+	public String[] lon;
+	private String KEY_PREF_HEAVY_TRAFFIC;
+	private String KEY_PREF_LOW_VISIBILITY;
+	private String KEY_PREF_ROAD_STATE;
+	private String KEY_PREF_CRASHES;
+	private String KEY_PREF_WORKS;
+	private String KEY_PREF_VEHICLE_NO_VISIBLE;
 	
-	String[] lista;
-	String[] lat;
-	String[] lon;
-	TextToSpeech speech;
-	int queue;
-	
-	public static final String KEY_PREF_HEAVY_TRAFFIC="heavy_traffic_pref";
-	public static final String KEY_PREF_LOW_VISIBILITY="low_visibility_pref";
-	public static final String KEY_PREF_ROAD_STATE="road_state_pref";
-	public static final String KEY_PREF_CRASHES="crashes_pref";
-	public static final String KEY_PREF_WORKS="work_pref";	
-	public static final String KEY_PREF_VEHICLE_NO_VISIBLE="vehicle_no_visible_pref";
 	
 	/*********************************************************************
 	** 																	**
@@ -91,15 +89,21 @@ public class Manage_BT_Comunication {
 	**********************************************************************/
 	//public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1) {
 
-		public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1, TextToSpeech mTts, int queueFlush, AndroidTextToSpeech tts, SharedPreferences preferencias) {
+		public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1,AndroidTextToSpeech tts, SharedPreferences preferencias) {
 		//inicializar 
 		main=mainActivity;
 		BluetoothAdapter=mBluetoothAdapter;
 		alertManager=alertManager1;
-		speech=mTts;
-		queue=queueFlush;
+		
 		ttspeech=tts;
 		preferencesButtons=preferencias;
+		//strings
+		KEY_PREF_HEAVY_TRAFFIC = main.getResources().getText(R.string.KEY_PREF_HEAVY_TRAFFIC).toString();
+		KEY_PREF_LOW_VISIBILITY= main.getResources().getText(R.string.KEY_PREF_LOW_VISIBILITY).toString();
+		KEY_PREF_ROAD_STATE= main.getResources().getText(R.string.KEY_PREF_ROAD_STATE).toString();
+		KEY_PREF_CRASHES= main.getResources().getText(R.string.KEY_PREF_CRASHES).toString();
+		KEY_PREF_WORKS= main.getResources().getText(R.string.KEY_PREF_WORKS).toString();
+		KEY_PREF_VEHICLE_NO_VISIBLE= main.getResources().getText(R.string.KEY_PREF_VEHICLE_NO_VISIBLE).toString();
 	}
 
 
@@ -109,17 +113,17 @@ public class Manage_BT_Comunication {
    *  y si esta desactivado, muestra un mensaje
    ************************************************************************/
 
-		public void check_BluetoothStatus() {
+	public void check_BluetoothStatus() {
 			BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();    
 		    if (!mBluetoothAdapter.isEnabled()) {
 	         	//mensaje emergente
 		    	Toast.makeText( main, "The Bluetooth is not activated", Toast.LENGTH_SHORT).show();
 		    }		
-		}
+	}
 		
 		
 	/****************************************************************
-	* @return 
+	 * @return 
 	 * @brief Pone el dispositivo del usuario visible para el resto
 	************************************************************/	
 	public Intent set_bt_discoverable() {
@@ -132,7 +136,10 @@ public class Manage_BT_Comunication {
 	
 	}
 	
-	
+	/****************************************************************
+	 * @return 
+	 * @brief Habilita el BluetoothAdapter
+	************************************************************/	
 	public void turnOffBT(android.bluetooth.BluetoothAdapter mBluetoothAdapter){
   	    mBluetoothAdapter.disable();
 
@@ -164,15 +171,11 @@ public class Manage_BT_Comunication {
             case MESSAGE_STATE_CHANGE:
                 switch (msg.arg1) {
                 case BluetoothChatService.STATE_CONNECTED:
-                    //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                    //mConversationArrayAdapter.clear();
                     break;
                 case BluetoothChatService.STATE_CONNECTING:
-                   // setStatus(R.string.title_connecting);
                     break;
                 case BluetoothChatService.STATE_LISTEN:
                 case BluetoothChatService.STATE_NONE:
-                  //  setStatus(R.string.title_not_connected);
                     break;
                 }
                 break;
@@ -240,7 +243,6 @@ public class Manage_BT_Comunication {
               Toast.makeText(main.getApplicationContext(), readMessage, Toast.LENGTH_SHORT).show();
 			  alert_Info_Update(temp,readMessage);
 			  BT_in_message="";
-
 		  }
 		  }
 	  }
@@ -262,14 +264,13 @@ public class Manage_BT_Comunication {
 		//NORTE/SUR =0/1 (mirar +/-) 
 		//este/oeste =2/3 (mirar +/-) 
 		//los grados igual + minutos/60 + segundos/3600
-	  // Creamos unos string donde almacenaremos los trozos separados.
+	    // Creamos unos string donde almacenaremos los trozos separados.
 		
 		init_arrays();		
 		Double dlat=0.0,dlon=0.0;
-		int cont_barras;
+		int cont_barras;		
+		String cadenaEntrante = readMessage;	
 		
-		String cadenaEntrante = readMessage;		
-	
 		cont_barras=check_tamTrama(cadenaEntrante);//comprobar si hay 4 o 5 barras, si las hay esta bien, sino el mensaje es erroneo
 		
 		if (cont_barras!=4 && cont_barras!=5){
@@ -351,8 +352,7 @@ public class Manage_BT_Comunication {
 			if (caracterLon=='.'){
 				cont_lista2++;
 			}
-		}
-		
+		}		
 		return cont_lista2;
 	}
 	

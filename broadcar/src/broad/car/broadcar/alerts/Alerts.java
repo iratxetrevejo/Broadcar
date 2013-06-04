@@ -30,12 +30,13 @@ public class Alerts {
 	** 																	**
 	**********************************************************************/
 	private int id=0;
-	private String key="Alert";
 	private boolean state=false;
 	private boolean show=false;
 	private double lat;
 	private double lon;
 	private int icon=R.drawable.default_alert_icon;
+	private String key="Alert";
+	
 	
 	
 	/**********************************************************************

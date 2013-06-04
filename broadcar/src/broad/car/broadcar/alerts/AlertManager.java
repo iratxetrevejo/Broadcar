@@ -5,6 +5,8 @@
 **********************************************************************/
 package broad.car.broadcar.alerts;
 
+import android.content.SharedPreferences;
+
 
 /** @addtogroup Broadcar
 *
@@ -46,12 +48,12 @@ public class AlertManager {
 	private static final int MAX_TYPEVisibility = 3;
 	private static final int MAX_TYPERoadstate = 5;
 	
-	private static int posCrashes=0;
-	private static int posHeavyTraffic=0;
-	private static int posLowVisibility[];
-	private static int posWorks=0;
-	private static int posNoVisibleVehicle=0;
-	private static int posRoadState[];
+	private int posCrashes=0;
+	private int posHeavyTraffic=0;
+	private int posLowVisibility[];
+	private int posWorks=0;
+	private int posNoVisibleVehicle=0;
+	private int posRoadState[];
 	
 
 	/*********************************************************************
@@ -74,13 +76,12 @@ public class AlertManager {
 		
 		heavytraffic_init();
 		lowvisibility_init();
-		crashes_inti();
+		crashes_init();
 		novisiblevehicle_init();
 		roadstate_init();
 		works_init();	
 	}
-	
-	
+		
 	
 	
 	/*********************************************************************
@@ -88,8 +89,7 @@ public class AlertManager {
 	** LOCAL FUNCTIONS 													**
 	** 																	**
 	**********************************************************************/
-	
-	
+		
 	
 	/**********************************************************************
 	       Getters de los contadores de los arrays.	
@@ -480,7 +480,7 @@ public class AlertManager {
 
 	
 	/**********************************************************************
-	 * @brief   crashes_inti es la funcion que se ocupa de inicializar 
+	 * @brief   crashes_init es la funcion que se ocupa de inicializar 
 	 * las alertas correspondientes a los accidentes.
 	 * @par   Logica:
 	 * 			-Crea los arrays para las alertas y dentro de el crea las alertas en 
@@ -488,11 +488,188 @@ public class AlertManager {
 	 * @return 
 	 * @TODO 
 	**********************************************************************/
-	public void crashes_inti(){
+	public void crashes_init(){
 		crashes_Alerts=new Crashes_Alerts[MAX_ALERT];
 		for(int i=0;i<crashes_Alerts.length;i++){
 			crashes_Alerts[i]=new Crashes_Alerts();
 
 		}
+	}
+	
+	/**********************************************************************
+	 * @brief   Se encarga de activar el estado de las alertas del array correspondiente
+	 * 			a heavy traffic. 
+	 * @par   Logica:
+	 * 			Comprueba si se ha pulsado activar o no, y de ser cierto utiliza la funcion
+	 * 			setState para ponerla a true.
+	 * 
+	 * @param SharedPreferences preferencias- preferencias del menú
+	 * @param boolean switchHeavy_traffic_pref - estado de la preferencia
+	 * @param String keyPrefHeavyTraffic - string definido en string.xml con la key para la preferencia de heavy traffic
+	 * @return 
+	 * @TODO 
+	**********************************************************************/
+	public void change_HeavyTraffic_alertState(SharedPreferences preferencias, boolean switchHeavy_traffic_pref, String keyPrefHeavyTraffic){
+		switchHeavy_traffic_pref = preferencias.getBoolean(keyPrefHeavyTraffic, true);
+		if(switchHeavy_traffic_pref){
+			for(int i=0;i<getHeavytraffic_alerts().length;i++){
+				heavytraffic_Alerts[i].setState(true);
+			}
+        }else{
+			for(int i=0;i<getHeavytraffic_alerts().length;i++){
+				heavytraffic_Alerts[i].setState(false);
+			}
+        }  
+	}
+	
+	/**********************************************************************
+	 * @brief   Se encarga de activar el estado de las alertas del array correspondiente
+	 * 			a crashes. 
+	 * @par   Logica:
+	 * 			Comprueba si se ha pulsado activar o no, y de ser cierto utiliza la funcion
+	 * 			setState para ponerla a true.
+	 * 
+	 * @param SharedPreferences preferencias- preferencias del menú
+	 * @param boolean switchCrashes_pref - estado de la preferencia
+	 * @param String keyCrashes - string definido en string.xml con la key para la preferencia de crashes
+	 * @return 
+	 * @TODO 
+	**********************************************************************/
+	
+	public void change_Crashes_alertState(SharedPreferences preferencias, boolean switchCrashes_pref, String keyCrashes){
+
+	switchCrashes_pref = preferencias.getBoolean(keyCrashes, true);
+	if(switchCrashes_pref){
+		for(int i=0;i<getCrashes_Alerts().length;i++){
+			crashes_Alerts[i].setState(true);
+		}
+    }else{
+    	for(int i=0;i<getCrashes_Alerts().length;i++){
+			crashes_Alerts[i].setState(false);
+		}
+    } 
+	}
+
+
+	/**********************************************************************
+	 * @brief   Se encarga de activar el estado de las alertas del array correspondiente
+	 * 			a road state. 
+	 * @par   Logica:
+	 * 			Comprueba si se ha pulsado activar o no, y de ser cierto utiliza la funcion
+	 * 			setState para ponerla a true.
+	 * 
+	 * @param SharedPreferences preferencias- preferencias del menú
+	 * @param boolean switchRoad_state_pref - estado de la preferencia
+	 * @param String keyPrefRoadState - string definido en string.xml con la key para la preferencia de road state
+	 * @return 
+	 * @TODO 
+	**********************************************************************/
+
+	public void change_RoadState_alertState(SharedPreferences preferencias, boolean switchRoad_state_pref, String keyPrefRoadState) {
+		switchRoad_state_pref = preferencias.getBoolean(keyPrefRoadState, true);
+		if(switchRoad_state_pref){
+			for(int j=0;j<getRoadState_Alerts().length;j++){
+				for(int i=0;i<getRoadState_Alerts().length;i++){
+					roadstate_Alerts[j][i].setState(true);
+				}
+			}
+
+        }else{
+        	for(int j=0;j<getRoadState_Alerts().length;j++){
+	        	for(int i=0;i<getRoadState_Alerts().length;i++){
+					roadstate_Alerts[j][i].setState(false);
+				}
+        	}  
+        }		
+	}
+
+
+	/**********************************************************************
+	 * @brief   Se encarga de activar el estado de las alertas del array correspondiente
+	 * 			a low visibility. 
+	 * @par   Logica:
+	 * 			Comprueba si se ha pulsado activar o no, y de ser cierto utiliza la funcion
+	 * 			setState para ponerla a true.
+	 * 
+	 * @param SharedPreferences preferencias- preferencias del menú
+	 * @param boolean switchLow_visibility_pref - estado de la preferencia
+	 * @param String keyPrefLowVisibility - string definido en string.xml con la key para la preferencia de low visibility
+	 * @return 
+	 * @TODO 
+	**********************************************************************/
+
+	public void change_LowVisibility_alertState(SharedPreferences preferencias, boolean switchLow_visibility_pref, String keyPrefLowVisibility) {
+		switchLow_visibility_pref = preferencias.getBoolean(keyPrefLowVisibility, true);
+		if(switchLow_visibility_pref){
+			for(int j=0;j<getLowVisibility_Alerts().length;j++){
+				for(int i=0;i<lowVisibility_Alerts[j].length;i++){
+					lowVisibility_Alerts[j][i].setState(true);
+				}	
+			}
+			
+        }else{
+        	for(int j=0;j<getLowVisibility_Alerts().length;j++){
+	        	for(int i=0;i<lowVisibility_Alerts[j].length;i++){
+					lowVisibility_Alerts[j][i].setState(false);
+				}
+        	}
+        }  		
+	}
+
+
+	/**********************************************************************
+	 * @brief   Se encarga de activar el estado de las alertas del array correspondiente
+	 * 			a vehicle no visible 
+	 * @par   Logica:
+	 * 			Comprueba si se ha pulsado activar o no, y de ser cierto utiliza la funcion
+	 * 			setState para ponerla a true.
+	 * 
+	 * @param SharedPreferences preferencias- preferencias del menú
+	 * @param boolean switchVehicle_no_visible_pref - estado de la preferencia
+	 * @param String keyPrefVehicleNoVisible - string definido en string.xml con la key para la preferencia de vehicle no visible
+	 * @return 
+	 * @TODO 
+	**********************************************************************/
+
+
+	public void change_VnoVisible_alertState(SharedPreferences preferencias, boolean switchVehicle_no_visible_pref, String keyPrefVehicleNoVisible) {
+		switchVehicle_no_visible_pref = preferencias.getBoolean(keyPrefVehicleNoVisible, true);
+		if(switchVehicle_no_visible_pref){
+			for(int i=0;i<getNoVisibleVehicle_Alerts().length;i++){
+				noVisibleVehicle_Alerts[i].setState(true);
+			}
+        }else{
+        	for(int i=0;i<getNoVisibleVehicle_Alerts().length;i++){
+				noVisibleVehicle_Alerts[i].setState(false);
+			}
+        }  		
+	}
+
+
+	/**********************************************************************
+	 * @brief   Se encarga de activar el estado de las alertas del array correspondiente
+	 * 			a works 
+	 * @par   Logica:
+	 * 			Comprueba si se ha pulsado activar o no, y de ser cierto utiliza la funcion
+	 * 			setState para ponerla a true.
+	 * 
+	 * @param SharedPreferences preferencias- preferencias del menú
+	 * @param boolean switchWorks_pref - estado de la preferencia
+	 * @param String keyPrefWorks - string definido en string.xml con la key para la preferencia de works
+	 * @return 
+	 * @TODO 
+	**********************************************************************/
+
+	public void change_works_alertState(SharedPreferences preferencias, boolean switchWorks_pref, String keyPrefWorks) {
+		switchWorks_pref = preferencias.getBoolean(keyPrefWorks, true);
+		if(switchWorks_pref){
+			for(int i=0;i<getWorks_Alerts().length;i++){
+				works_Alerts[i].setState(true);
+			}
+        }else{
+        	for(int i=0;i<getWorks_Alerts().length;i++){
+				works_Alerts[i].setState(false);
+			}
+        }  		
 	}
 }

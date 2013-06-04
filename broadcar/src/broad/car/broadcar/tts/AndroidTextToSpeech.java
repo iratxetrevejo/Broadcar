@@ -20,13 +20,14 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 	** GLOBAL VARIABLES 												**
 	** 																	**
 	**********************************************************************/
-   private TextToSpeech mTts;
-   getLocation alertAddr;
+   private TextToSpeech textToSpeech;
+   
+   LocationAddress alertAddr;
    
    /**********************************************************************
 	 * @brief Constructor de la clase AndroidTextToSpeech
 	**********************************************************************/		
-   public AndroidTextToSpeech(getLocation alertAddress) {
+   public AndroidTextToSpeech(LocationAddress alertAddress) {
 	   alertAddr=alertAddress;
 }
 	
@@ -49,7 +50,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
        // Fire off an intent to check if a TTS engine is installed
        Intent checkIntent = new Intent();
   	   checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-  	   mTts = new TextToSpeech(mainContext,this);
+  	   textToSpeech = new TextToSpeech(mainContext,this);
    }
 
 
@@ -62,10 +63,10 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 	**********************************************************************/	
    public void onInit(int i)
    {
-		mTts.setLanguage(Locale.US);
+		textToSpeech.setLanguage(Locale.US);
 
 		String myText1 = "Wellcome to the broadcar application. ";
-		mTts.speak(myText1, TextToSpeech.QUEUE_FLUSH, null);
+		textToSpeech.speak(myText1, TextToSpeech.QUEUE_FLUSH, null);
 	}
    
    /**********************************************************************
@@ -75,7 +76,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 	 * @TODO 
 	**********************************************************************/	
    public TextToSpeech getMtts(){
-	   return mTts;
+	   return textToSpeech;
    }
    
    /**********************************************************************
@@ -98,11 +99,11 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
    
    public void HeavyTraffic(double dlat, double dlon) throws IOException, InterruptedException{
 	  	Locale spanish = new Locale("es", "ES");
-	  	mTts.setLanguage(spanish);
-		String myText1 = "Trafico denso en";
+	  	textToSpeech.setLanguage(spanish);
+		String myText1 = "Tráfico denso en";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
-		mTts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+		textToSpeech.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
 
    }
    /**********************************************************************
@@ -117,7 +118,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
  		String myText1 = "Poca visibilidad en ";
  		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
-		mTts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+		textToSpeech.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }
    /**********************************************************************
  	 * @brief Se encarga de anunciar un nueva alerta del tipo road state
@@ -131,7 +132,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 		String myText1 = "Mal estado de la carretera en ";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
-		mTts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+		textToSpeech.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
    }
    
    /**********************************************************************
@@ -146,7 +147,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 		String myText1 = "Accidente en";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
-		mTts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+		textToSpeech.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
    }
    
    /**********************************************************************
@@ -161,7 +162,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 		String myText1 = "Obras en la carretera en ";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
-		mTts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);  
+		textToSpeech.speak(texto, TextToSpeech.QUEUE_FLUSH, null);  
 	}   
    /**********************************************************************
  	 * @brief Se encarga de anunciar un nueva alerta del tipo vehicle no visible
@@ -175,7 +176,7 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
 		String myText1 = "Vehiculo no visible en";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
-		mTts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+		textToSpeech.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
   }
    
 }

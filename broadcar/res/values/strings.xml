@@ -20,9 +20,9 @@
     <string name="heavytraffic">Heavy traffic</string>
     <string name="works">Works on road</string>
     <string name="lowvisibility">Low visibility</string>
-    	<string name="snow">Snow</string>
-   		<string name="heavyrain">Heavy rain</string>
-  		<string name="fog">Fog</string> 		
+    <string name="snow">Snow</string>
+   	<string name="heavyrain">Heavy rain</string>
+  	<string name="fog">Fog</string> 		
     <string name="roadstate">Road state</string>
 	    <string name="ice">Ice on road</string>
 	    <string name="oil">Oil on road</string>
@@ -76,5 +76,22 @@
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
     
+    
+    <string name="KEY_PREF_HEAVY_TRAFFIC">heavy_traffic_pref</string>
+    <string name="KEY_PREF_LOW_VISIBILITY">low_visibility_pref</string>
+    <string name="KEY_PREF_ROAD_STATE">road_state_pref</string>
+    <string name="KEY_PREF_CRASHES">crashes_pref</string>
+    <string name="KEY_PREF_WORKS">work_pref</string>
+    <string name="KEY_PREF_VEHICLE_NO_VISIBLE">vehicle_no_visible_pref</string>
+    
+    <string name="KEY_PREF_LIST_PREF">listPref</string>
+    <string name="maplistpref"></string>
+    
+    <string name="DEVICE_NAME">device_name</string> 
+    <string name="TOAST">toast</string>
+   	<string name="TAG">DeviceListActivity</string>
+    <string name="EXTRA_DEVICE_ADDRESS">device_address</string>
+   
+   
 
 </resources>
