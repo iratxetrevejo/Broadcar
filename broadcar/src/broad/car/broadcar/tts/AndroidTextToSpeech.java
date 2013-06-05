@@ -114,7 +114,8 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
  	 * @TODO 
  	**********************************************************************/	
    public void LowVisibility(double dlat, double dlon) throws IOException{
-
+		Locale spanish = new Locale("es", "ES");
+	  	textToSpeech.setLanguage(spanish);
  		String myText1 = "Poca visibilidad en ";
  		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
@@ -128,7 +129,8 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
  	 * @TODO 
  	**********************************************************************/	
    public void Roadstate(double dlat, double dlon) throws IOException{
-
+		Locale spanish = new Locale("es", "ES");
+	  	textToSpeech.setLanguage(spanish);
 		String myText1 = "Mal estado de la carretera en ";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
@@ -143,7 +145,8 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
  	 * @TODO 
  	**********************************************************************/	
    public void Crashes(double dlat, double dlon) throws IOException{
-
+		Locale spanish = new Locale("es", "ES");
+	  	textToSpeech.setLanguage(spanish);
 		String myText1 = "Accidente en";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
@@ -158,7 +161,8 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
  	 * @TODO 
  	**********************************************************************/	
    public void WorksOnRoad(double dlat, double dlon) throws IOException{
-
+		Locale spanish = new Locale("es", "ES");
+	  	textToSpeech.setLanguage(spanish);
 		String myText1 = "Obras en la carretera en ";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);
@@ -172,7 +176,8 @@ public class AndroidTextToSpeech implements TextToSpeech.OnInitListener
  	 * @TODO 
  	**********************************************************************/	
    public void VehicleNoVisible(double dlat, double dlon) throws IOException{
-
+		Locale spanish = new Locale("es", "ES");
+	  	textToSpeech.setLanguage(spanish);
 		String myText1 = "Vehiculo no visible en";
 		String addr = alertAddr.getAddress(dlat, dlon);
 		String  texto= myText1.concat(addr);

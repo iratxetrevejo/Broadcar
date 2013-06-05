@@ -70,7 +70,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	//mapa de google
 	MapGoogle mapa;
 	//Clase encargada de la configuracion del gps	
-	Gps gps;
+	gps gps;
 	//calcula la direccion en la que a ocurrido la alerta
 	LocationAddress alertAddress;
 	//la voz
@@ -89,12 +89,12 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
 	
 	//Variables encargadas de recoger el estado de las alertas (true/false)
-	private boolean switchHeavy_traffic_pref;
-	private boolean switchLow_visibility_pref;
-	private boolean switchRoad_state_pref;
-	private boolean switchCrashes_pref;
-	private boolean switchWorks_pref;
-	private boolean switchVehicle_no_visible_pref;
+	public boolean switchHeavy_traffic_pref;
+	public boolean switchLow_visibility_pref;
+	public boolean switchRoad_state_pref;
+	public boolean switchCrashes_pref;
+	public boolean switchWorks_pref;
+	public boolean switchVehicle_no_visible_pref;
 	
 	//string recogidos de R.strings con el codigo para cada alerta
 	private String KEY_PREF_HEAVY_TRAFFIC;
@@ -160,7 +160,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		mBluetoothAdapter.enable();
 
-		manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,ttSpeech,preferencias);
+		manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,ttSpeech,preferencias,marker);
 
 		//se comprueba el estado del bluetooth (on/off)
 		manage_BT.check_BluetoothStatus();	

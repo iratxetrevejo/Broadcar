@@ -18,6 +18,7 @@ import android.os.Message;
 import android.widget.Toast;
 import broad.car.broadcar.alerts.AlertManager;
 import broad.car.broadcar.bluetooth.DeviceListActivity;
+import broad.car.broadcar.map.markers;
 import broad.car.broadcar.tts.AndroidTextToSpeech;
 
 
@@ -55,6 +56,8 @@ public class Manage_BT_Comunication {
 	AndroidTextToSpeech ttspeech;
 		
 	SharedPreferences preferencesButtons;
+	
+	markers marcadores;
 	/*********************************************************************
 	** 																	**
 	** GLOBAL VARIABLES 												**
@@ -84,17 +87,18 @@ public class Manage_BT_Comunication {
 	 * @param queueFlush 
 	 * @param tts 
 	 * @param preferencias 
+	 * @param marker 
 	 * @param  
 	 * @param alertManager *
 	**********************************************************************/
 	//public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1) {
 
-		public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1,AndroidTextToSpeech tts, SharedPreferences preferencias) {
+		public Manage_BT_Comunication(MainActivity mainActivity, BluetoothAdapter mBluetoothAdapter,AlertManager alertManager1,AndroidTextToSpeech tts, SharedPreferences preferencias, markers marker) {
 		//inicializar 
 		main=mainActivity;
 		BluetoothAdapter=mBluetoothAdapter;
 		alertManager=alertManager1;
-		
+		marcadores=marker;
 		ttspeech=tts;
 		preferencesButtons=preferencias;
 		//strings
@@ -234,13 +238,14 @@ public class Manage_BT_Comunication {
 		 char finalChar=mensajeLimpio.charAt(mensajeLimpio.length()-1);
 
 		  if(finalChar!='$'){
-			  BT_in_message=mensajeLimpio.concat(mensajeLimpio);
+			  BT_in_message=BT_in_message.concat(mensajeLimpio);
+
 			  //concat Alerta
 		  }else{
 			  //concat Alerta
 			  BT_in_message=BT_in_message.concat(mensajeLimpio);
 			  temp=BT_in_message.substring(0, BT_in_message.length()-1);	
-              Toast.makeText(main.getApplicationContext(), readMessage, Toast.LENGTH_SHORT).show();
+              Toast.makeText(main.getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
 			  alert_Info_Update(temp,readMessage);
 			  BT_in_message="";
 		  }
@@ -451,10 +456,7 @@ public class Manage_BT_Comunication {
 		
 		//Cambiamos la ultima alerta de trafico denso
 		if(lista[0].equals("0")){
-			boolean state = preferencesButtons.getBoolean(KEY_PREF_HEAVY_TRAFFIC, true);
-			if (state==true){
-				ttspeech.HeavyTraffic(dlat, dlon);			
-			}
+			
 
 			if(lista[3].equals("1")){
 				alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setDirection(true);
@@ -466,7 +468,16 @@ public class Manage_BT_Comunication {
 			alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setLon(dlon);
 			alertManager.heavytraffic_Alerts[alertManager.getposHeavyTraffic()].setShow(true);
 			alertManager.addposHeavyTraffic();	
-		}	
+			
+			alertManager.change_HeavyTraffic_alertState(preferencesButtons,main.switchHeavy_traffic_pref, KEY_PREF_HEAVY_TRAFFIC);
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_HEAVY_TRAFFIC, true);
+			if (state==true){
+				ttspeech.HeavyTraffic(dlat, dlon);		
+				marcadores.addMarkersToMap();
+
+			}
+		}
+
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -480,10 +491,7 @@ public class Manage_BT_Comunication {
 	   */			
 	public void noVisibleVehicle_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("2")){
-			boolean state = preferencesButtons.getBoolean(KEY_PREF_VEHICLE_NO_VISIBLE, true);
-			if (state==true){
-				ttspeech.VehicleNoVisible(dlat, dlon);
-			}
+			
 			if(lista[3].equals("1")){
 				alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setDirection(true);
 			}else{
@@ -494,7 +502,17 @@ public class Manage_BT_Comunication {
 			alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setLon(dlon);
 			alertManager.noVisibleVehicle_Alerts[alertManager.getposNoVisibleVehicle()].setShow(true);
 			alertManager.addposNoVisibleVehicle();
+			
+			alertManager.change_VnoVisible_alertState(preferencesButtons,main.switchVehicle_no_visible_pref,KEY_PREF_VEHICLE_NO_VISIBLE);
+
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_VEHICLE_NO_VISIBLE, true);
+			if (state==true){
+				ttspeech.VehicleNoVisible(dlat, dlon);
+				marcadores.addMarkersToMap();
+
+			}
 		}
+
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -508,10 +526,7 @@ public class Manage_BT_Comunication {
 	   */
 	public void works_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("1")){ 
-			boolean state = preferencesButtons.getBoolean(KEY_PREF_WORKS, true);
-			if (state==true){
-				ttspeech.WorksOnRoad(dlat, dlon);
-			}
+			
 			if(lista[3].equals("1")){
 				alertManager.works_Alerts[alertManager.getposWorks()].setDirection(true);
 			}else{
@@ -526,8 +541,17 @@ public class Manage_BT_Comunication {
 			alertManager.works_Alerts[alertManager.getposWorks()].setLon(dlon);
 			alertManager.works_Alerts[alertManager.getposWorks()].setShow(true);
 			alertManager.addposWorks();
+			
+			alertManager.change_works_alertState(preferencesButtons,main.switchWorks_pref,KEY_PREF_WORKS);
+
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_WORKS, true);
+			if (state==true){
+				ttspeech.WorksOnRoad(dlat, dlon);
+				marcadores.addMarkersToMap();
+
+			}
 		}
-	
+
 	}
 	  /**
 	   * @name	noVisibleVehicle_Alerts
@@ -541,10 +565,7 @@ public class Manage_BT_Comunication {
 	   */	
 	public void crashes_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("5")){ 
-			boolean state = preferencesButtons.getBoolean(KEY_PREF_CRASHES, true);
-			if (state==true){
-				ttspeech.Crashes(dlat, dlon);
-			}
+		
 			if(lista[3].equals("1")){
 				alertManager.crashes_Alerts[alertManager.getposCrashes()].setDirection(true);
 			}else{
@@ -559,7 +580,17 @@ public class Manage_BT_Comunication {
 			alertManager.crashes_Alerts[alertManager.getposCrashes()].setLon(dlon);
 			alertManager.crashes_Alerts[alertManager.getposCrashes()].setShow(true);
 			alertManager.addPosCrashes();
+			
+			alertManager.change_Crashes_alertState(preferencesButtons,main.switchCrashes_pref,KEY_PREF_CRASHES); 
+
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_CRASHES, true);
+			if (state==true){
+				ttspeech.Crashes(dlat, dlon);
+				marcadores.addMarkersToMap();
+
+			}
 		}   
+
 	
 	}
 	  /**
@@ -574,16 +605,23 @@ public class Manage_BT_Comunication {
 	   */
 	public void lowVisibility_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("3")){  
-			boolean state = preferencesButtons.getBoolean(KEY_PREF_LOW_VISIBILITY, true);
-			if (state==true){
-				ttspeech.LowVisibility(dlat, dlon);
-			}
+			
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setSeverity(Integer.parseInt(lista[4]));
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLat(dlat);
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setLon(dlon);
 			alertManager.lowVisibility_Alerts[Integer.parseInt(lista[3])][alertManager.getposLowVisibility(Integer.parseInt(lista[3]))].setShow(true);
 			alertManager.addposLowVisibility(Integer.parseInt(lista[3]));
+			
+			alertManager.change_LowVisibility_alertState(preferencesButtons,main.switchLow_visibility_pref,KEY_PREF_LOW_VISIBILITY);
+
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_LOW_VISIBILITY, true);
+			if (state==true){
+				ttspeech.LowVisibility(dlat, dlon);
+				marcadores.addMarkersToMap();
+
+			}
 		}
+
 	
 	}
 	  /**
@@ -598,10 +636,7 @@ public class Manage_BT_Comunication {
 	   */	
 	public void roadstate_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("4")){
-			boolean state = preferencesButtons.getBoolean(KEY_PREF_ROAD_STATE, true);
-			if (state==true){
-				ttspeech.Roadstate(dlat, dlon);
-			}
+			
 			if(lista[4].equals("1")){
 				alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setDirection(true);
 			}else{
@@ -612,8 +647,18 @@ public class Manage_BT_Comunication {
 			alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setLon(dlon);
 			alertManager.roadstate_Alerts[Integer.parseInt(lista[3])][alertManager.getposRoadState(Integer.parseInt(lista[3]))].setShow(true);
 			alertManager.addposRoadState(Integer.parseInt(lista[3]));
+			
+			boolean state = preferencesButtons.getBoolean(KEY_PREF_ROAD_STATE, true);
+			alertManager.change_RoadState_alertState(preferencesButtons,main.switchRoad_state_pref,KEY_PREF_ROAD_STATE);
+
+			if (state==true){
+				ttspeech.Roadstate(dlat, dlon);
+				marcadores.addMarkersToMap();
+
+			}
 		}	
-	
+		
+
 	}
 		
 /*********************************************************************
