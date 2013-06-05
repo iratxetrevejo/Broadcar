@@ -21,7 +21,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	
     <application
         android:allowBackup="true"
@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme" android:debuggable="true">
         <meta-data 
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBcvboXxjrTiV39RRsPrh8yyllOE29WUaQ"/>
+            android:value="AIzaSyBtt1aQGvruItOqaNMuQP6ga19tFrO0-mw"/>
         
         <activity
             android:name="broad.car.broadcar.MainActivity"
@@ -45,7 +45,13 @@
         </activity>
         <activity android:name="broad.car.broadcar.bluetooth.DeviceListActivity"></activity>
 		<activity android:name="broad.car.broadcar.tts.AndroidTextToSpeech"></activity>
-        
+        <activity android:name="broad.car.broadcar.speech.VoiceRecognition"></activity>
+        <service android:name="broad.car.broadcar.speech.service.SpeechActivationService"/> 
+                <receiver android:name="broad.car.broadcar.speech.service.ShowResultsSpeechActivationBroadcastReceiver">
+            <intent-filter >
+                <action android:name="broad.car.broadcar.speech.service.ACTIVATION"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

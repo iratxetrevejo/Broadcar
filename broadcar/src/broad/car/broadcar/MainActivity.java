@@ -8,23 +8,28 @@ package broad.car.broadcar;
  ** 																	**
  **********************************************************************/
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import broad.car.broadcar.alerts.AlertManager;
-import broad.car.broadcar.map.*;
-import broad.car.broadcar.tts.*;
-import broad.car.broadcar.bluetooth.*;
-import broad.car.broadcar.gps.*;
+import broad.car.broadcar.bluetooth.BluetoothChatService;
+import broad.car.broadcar.bluetooth.Manage_BT_Comunication;
+import broad.car.broadcar.gps.gps;
+import broad.car.broadcar.map.LocationAddress;
+import broad.car.broadcar.map.MapGoogle;
+import broad.car.broadcar.map.markers;
+import broad.car.broadcar.speech.service.SpeechActivationService;
+import broad.car.broadcar.tts.AndroidTextToSpeech;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 
 
 /** @addtogroup Broadcar
@@ -270,6 +275,10 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			Intent intent = manage_BT.show_Discoverable_devices();	
 			startActivityForResult(intent, REQUEST_CONNECT_DEVICE_SECURE);
 			return true;
+		case R.id.menu_speak: //El usuario selecciona la opcion de speech para comenzar con el servicio de deteccion de voz.
+			Intent recog= new Intent (MainActivity.this, SpeechActivationService.class);
+			startService(recog);
+			//stopService(new Intent (Main_activity.this, SpeechActivationService.class));
 		default:
 			return super.onOptionsItemSelected(item);
 		}

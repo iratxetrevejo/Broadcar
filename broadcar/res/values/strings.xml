@@ -91,6 +91,8 @@
     <string name="TOAST">toast</string>
    	<string name="TAG">DeviceListActivity</string>
     <string name="EXTRA_DEVICE_ADDRESS">device_address</string>
+    <string name="menu_start_speak">Start speaking</string>
+    <string name="menu_stop_speak">Stop speaking</string>
    
    
 
