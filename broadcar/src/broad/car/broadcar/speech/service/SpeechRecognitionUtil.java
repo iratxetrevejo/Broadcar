@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,7 +34,7 @@ import android.speech.SpeechRecognizer;
  */
 public class SpeechRecognitionUtil
 {
-    private static final String TAG = "SpeechRecognitionUtil";
+    
 
     //Note: Google seems to send back these values
     //use at your own risk

@@ -5,8 +5,8 @@ package broad.car.broadcar;
 /*********************************************************************
  **																	**
  ** MODULES USED 													**
- ** 																	**
- **********************************************************************/
+ ** 																**
+ *********************************************************************/
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -54,9 +54,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 public class MainActivity extends android.support.v4.app.FragmentActivity implements OnSharedPreferenceChangeListener{
 
 	/*********************************************************************
-	 ** 																	**
+	 ** 																**
 	 ** IMPORTED CLASSES / Declarations  								**
-	 ** 																	**
+	 ** 																**
 	 **********************************************************************/
 	//Mapa de google
 	GoogleMap googleMap = null;
@@ -80,15 +80,15 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	LocationAddress alertAddress;
 	//la voz
 	AndroidTextToSpeech ttSpeech;
-
+	//Los marcadores
 	markers marker;
 
 
 
 	/*********************************************************************
-	 ** 																	**
+	 ** 																**
 	 ** GLOBAL VARIABLES 												**
-	 ** 																	**
+	 ** 																**
 	 **********************************************************************/
 	//Indicador para determinar una conexión segura
 	private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -112,9 +112,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	private String maplistpref;
 
 	/*********************************************************************
-	 ** 																	**
-	 ** LOCAL FUNCTIONS 													**
-	 ** 																	**
+	 ** 																**
+	 ** LOCAL FUNCTIONS 												**
+	 ** 																**
 	 **********************************************************************/
 	
 	
@@ -215,7 +215,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	 **********************************************************************/
 
 	private void initPreferences() {
-		preferencias= PreferenceManager.getDefaultSharedPreferences(this);
+		preferencias = getSharedPreferences("prefereces", Activity.MODE_PRIVATE);
 		preferencias.registerOnSharedPreferenceChangeListener(this);
 		//get the state of the alerts
 		switchHeavy_traffic_pref = preferencias.getBoolean(KEY_PREF_HEAVY_TRAFFIC, true);

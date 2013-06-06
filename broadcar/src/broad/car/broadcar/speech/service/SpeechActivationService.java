@@ -29,11 +29,18 @@ import broad.car.broadcar.speech.VoiceRecognition;
  * Use {@link Intent}s to start and stop it
  * @author Greg Milette &#60;<a
  *         href="mailto:gregorym@gmail.com">gregorym@gmail.com</a>&#62;
- * 
+ * @Modified by: Ibon ortega & Iratxe Trevejo
  */
 public class SpeechActivationService extends Service implements
         SpeechActivationListener
 {
+	
+	/*********************************************************************
+	 ** 																**
+	 ** GLOBAL VARIABLES 												**
+	 ** 																**
+	 **********************************************************************/
+	
     private static final String TAG = "SpeechActivationService";
     public static final String NOTIFICATION_ICON_RESOURCE_INTENT_KEY =
         "NOTIFICATION_ICON_RESOURCE_INTENT_KEY";
@@ -56,6 +63,13 @@ public class SpeechActivationService extends Service implements
 
     private SpeechActivator activator;
 
+    
+	/*********************************************************************
+	 ** 																**
+	 ** LOCAL FUNCTIONS 												**
+	 ** 																**
+	 **********************************************************************/
+    
     @Override
     public void onCreate()
     {
@@ -78,10 +92,20 @@ public class SpeechActivationService extends Service implements
         return i;
     }
 
-    /**
-     * stop or start an activator based on the activator type and if an
-     * activator is currently running
-     */
+
+    
+	/**********************************************************************
+	 * @brief  onStartCommand se lanza al crearse el servicio. 
+	 * @par	   Logica 
+	 * 		    -	La fabrica de activadores {@link SpeechActivatorFactory} crea 
+	 * 				un activador {@link WordActivator} con la palabra "Hola"
+	 * @param   Intent intent, int flags, int startId
+	 * @return
+	 * @TODO 
+	 * @Description  Stop or start an activator based on the activator type and if an
+     * 				activator is currently running
+	 **********************************************************************/
+    
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
@@ -150,6 +174,15 @@ public class SpeechActivationService extends Service implements
         return different;
     }
 
+	/**********************************************************************
+	 * @brief  activated se ejecuta cuando se recibe que la palabra asignada 
+	 * 			al activador se recibe. 
+	 * @par	   Logica 
+	 * 		    -	Lanza el intent de reconocimiento de voz. 
+	 * 			-	Detiene la ejecucion del servicio.
+	 * @param   Intent intent, int flags, int startId
+	 * @return
+	 **********************************************************************/
     @Override
     public void activated(boolean success)
     {
