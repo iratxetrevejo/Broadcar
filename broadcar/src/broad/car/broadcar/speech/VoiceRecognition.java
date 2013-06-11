@@ -80,7 +80,7 @@ public class VoiceRecognition extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.voice_recog);
-    	ctx = getApplicationContext(); 
+        ctx = getApplicationContext(); 
     	prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         commandMatcher = new CommandMatcher(prefs);
         active = true;

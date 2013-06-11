@@ -93,6 +93,10 @@
     <string name="EXTRA_DEVICE_ADDRESS">device_address</string>
     <string name="menu_start_speak">Start speaking</string>
     <string name="menu_stop_speak">Stop speaking</string>
+    <string name="KEY_PREF_SPEECH_RECOG">speech_recog_pref</string>
+    <string name="speechrecogOn">Speech recognizer started</string>
+    <string name="speechrecogOff">Speech recognizer stopped</string>
+    <string name="speechrecognizer">Speech recognizer</string>
    
    
 

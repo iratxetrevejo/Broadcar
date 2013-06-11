@@ -21,4 +21,5 @@
          android:entries="@array/mapasvalues"
          android:entryValues="@array/mapasvalues" />     
    </PreferenceCategory>
+        <SwitchPreference android:summaryOn="@string/speechrecogOn" android:key="@string/KEY_PREF_SPEECH_RECOG" android:title="@string/speechrecognizer" android:summaryOff="@string/speechrecogOff"/>
 </PreferenceScreen>

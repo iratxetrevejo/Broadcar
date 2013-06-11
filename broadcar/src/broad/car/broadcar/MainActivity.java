@@ -12,11 +12,13 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -102,7 +104,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	public boolean switchCrashes_pref;
 	public boolean switchWorks_pref;
 	public boolean switchVehicle_no_visible_pref;
-	
+	public boolean switchSpeech_recog_pref;
 	//string recogidos de R.strings con el codigo para cada alerta
 	private String KEY_PREF_HEAVY_TRAFFIC;
 	private String KEY_PREF_LOW_VISIBILITY;
@@ -110,12 +112,14 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	private String KEY_PREF_CRASHES;
 	private String KEY_PREF_WORKS;
 	private String KEY_PREF_VEHICLE_NO_VISIBLE;
+	private String KEY_PREF_SPEECH_RECOG;
 	private String KEY_PREF_LIST_PREF;
 	private String maplistpref;
 
 	boolean activado;
 
 	Intent recog;
+	SpeechActivationService speechrecog;
 	/*********************************************************************
 	 ** 																**
 	 ** LOCAL FUNCTIONS 												**
@@ -138,6 +142,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.activity_main);
+		speechrecog =new SpeechActivationService();
+		recog= new Intent (MainActivity.this,speechrecog.getClass());
+		
 		//PREFERENCIAS
 		KEY_PREF_LIST_PREF= getResources().getText(R.string.KEY_PREF_LIST_PREF).toString();
 
@@ -182,10 +189,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			//pide al Manage_BT_Comunication que cree el BluetoothChatService
 			manage_BT.createBluetoothChatService(this);
 	    }
-	   
-	    recog= new Intent (MainActivity.this, "broad.car.broadcar.speech.service.SpeechActivationService".getClass());
 		//habilita el gps desde el inicio
-		gps.turnGPSOn(this);                 
+		gps.turnGPSOn(this);      
+		
 	}
 
 
@@ -219,6 +225,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	 **********************************************************************/
 
 	private void initPreferences() {
+		preferencias= PreferenceManager.getDefaultSharedPreferences(this);
+		preferencias.registerOnSharedPreferenceChangeListener(this);
+    	
 		preferencias = getSharedPreferences("prefereces", Activity.MODE_PRIVATE);
 		preferencias.registerOnSharedPreferenceChangeListener(this);
 		//get the state of the alerts
@@ -227,7 +236,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		switchRoad_state_pref = preferencias.getBoolean(KEY_PREF_ROAD_STATE, true);
 		switchCrashes_pref = preferencias.getBoolean(KEY_PREF_CRASHES, true);
 		switchWorks_pref = preferencias.getBoolean(KEY_PREF_WORKS, true);     
-
+		switchSpeech_recog_pref = preferencias.getBoolean(KEY_PREF_SPEECH_RECOG, true);   
 		//inicializa las variables con el string determinado en strings.xml
 		KEY_PREF_HEAVY_TRAFFIC = getResources().getText(R.string.KEY_PREF_HEAVY_TRAFFIC).toString();
 		KEY_PREF_LOW_VISIBILITY= getResources().getText(R.string.KEY_PREF_LOW_VISIBILITY).toString();
@@ -235,6 +244,7 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		KEY_PREF_CRASHES= getResources().getText(R.string.KEY_PREF_CRASHES).toString();
 		KEY_PREF_WORKS= getResources().getText(R.string.KEY_PREF_WORKS).toString();
 		KEY_PREF_VEHICLE_NO_VISIBLE= getResources().getText(R.string.KEY_PREF_VEHICLE_NO_VISIBLE).toString();
+		KEY_PREF_SPEECH_RECOG=getResources().getText(R.string.KEY_PREF_SPEECH_RECOG).toString();
 	}
 
 
@@ -279,19 +289,6 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			Intent intent = manage_BT.show_Discoverable_devices();	
 			startActivityForResult(intent, REQUEST_CONNECT_DEVICE_SECURE);
 			return true;
-		case R.id.menu_speak: //El usuario selecciona la opcion de speech para comenzar con el servicio de deteccion de voz.
-			
-			if(!activado){
-				startService(recog);
-				activado=true;
-					Toast.makeText(getApplicationContext(), "Servicio activado", Toast.LENGTH_SHORT).show();
-				}else{
-					stopService(recog);
-					activado=false;
-					Toast.makeText(getApplicationContext(), "Servicio detenido", Toast.LENGTH_SHORT).show();
-				}			
-			
-			//stopService(new Intent (Main_activity.this, SpeechActivationService.class));
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -370,6 +367,15 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		if (key.equals(KEY_PREF_LIST_PREF)){
 			maplistpref = preferencias.getString(KEY_PREF_LIST_PREF,"NORMAL");
 			mapa.changeMapView(maplistpref);
+		}
+		if (key.equals(KEY_PREF_SPEECH_RECOG)) {
+			if(!activado){
+				startService(recog);
+				activado=true;
+			}else{
+				stopService(recog);
+				activado=false;
+			}
 		}
 		marker.addMarkersToMap(); // dibuja en el mapa las alertas activadas
 	}

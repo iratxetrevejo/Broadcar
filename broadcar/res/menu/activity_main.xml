@@ -2,5 +2,4 @@
     <item android:id="@+id/menugps" android:title="@string/startGps" android:orderInCategory="100"></item>
     <item android:id="@+id/menubt" android:title="@string/startBt" android:orderInCategory="100"></item>
     <item android:id="@+id/menu_settings" android:orderInCategory="100" android:showAsAction="never" android:title="@string/menu_settings" />
-    <item android:id="@+id/menu_speak" android:orderInCategory="100" android:showAsAction="never" android:title="@string/menu_start_speak"></item>
 </menu>

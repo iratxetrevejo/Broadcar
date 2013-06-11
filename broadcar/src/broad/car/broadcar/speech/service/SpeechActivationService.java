@@ -22,10 +22,13 @@ import android.app.Service;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import broad.car.broadcar.R;
 import broad.car.broadcar.speech.VoiceRecognition;
 
 /**
@@ -66,6 +69,10 @@ public class SpeechActivationService extends Service implements
     private Handler m_handler;
     Intent dialogIntent;
     VoiceRecognition recog;
+    Context ctx;
+    SharedPreferences pref;
+ 	private String KEY_PREF_SPEECH_RECOG;
+ 	
 	/*********************************************************************
 	 ** 																**
 	 ** LOCAL FUNCTIONS 												**
@@ -76,6 +83,10 @@ public class SpeechActivationService extends Service implements
     public void onCreate()
     {
         super.onCreate();
+        ctx = getApplicationContext(); 
+    	pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+    	KEY_PREF_SPEECH_RECOG=getResources().getText(R.string.KEY_PREF_SPEECH_RECOG).toString();
+    	
         isStarted = false;
         m_handler = new Handler();
         activator = SpeechActivatorFactory.createSpeechActivator(this, this, "hola");
@@ -88,7 +99,7 @@ public class SpeechActivationService extends Service implements
     	
          @Override 
          public void run() {
-        	 if(!isStarted){
+        	 if(pref.getBoolean(KEY_PREF_SPEECH_RECOG, false)){
         		 if(!recog.getActive()){
      				activator.detectActivation();   
      				Toast.makeText(getApplicationContext(),"Say 'Hola'", Toast.LENGTH_LONG).show();
