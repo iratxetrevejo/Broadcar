@@ -15,7 +15,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import broad.car.broadcar.alerts.AlertManager;
@@ -136,6 +135,10 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		//PREFERENCIAS
 		KEY_PREF_LIST_PREF= getResources().getText(R.string.KEY_PREF_LIST_PREF).toString();
 
+		//Obtiene el adaptador del bluetooth
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+	    mBluetoothAdapter.disable();
+	    
 		//Crea los objetos de las clases AlertManager y googleMap
 		alertManager=new AlertManager();
 		mapa=new MapGoogle();
@@ -156,29 +159,23 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 
 		//inicializa la localización del gps en el mapa
 		mapa.init_location(fragmentManager,locationManager,alertManager,marker);
-		
-		
 
 		//Se inicializan los estados de las alertas( default:true)
 		initPreferences();	
-		//Obtiene el adaptador del bluetooth
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mBluetoothAdapter.enable();
-
-		manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,ttSpeech,preferencias,marker);
-
-		//se comprueba el estado del bluetooth (on/off)
-		manage_BT.check_BluetoothStatus();	
-		//pasa el mChatChatService a la case Manage_BT_Comunication
-		manage_BT.setChatService(mChatService);
-		//pide al Manage_BT_Comunication que cree el BluetoothChatService
-		manage_BT.createBluetoothChatService(this);
-
-		if(!mBluetoothAdapter.isEnabled()){
-			//pone el dispositivo visible para el resto
-			Intent intent_discoverable = manage_BT.set_bt_discoverable();
-			startActivity(intent_discoverable); 
-		}
+		
+		//Inicia el BT 
+	    if (!mBluetoothAdapter.isEnabled()) { 
+	    	Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE); 
+			startActivityForResult(enableBtIntent, 3);
+	    }else{
+	    	manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,ttSpeech,preferencias,marker);
+			//se comprueba el estado del bluetooth (on/off)
+			manage_BT.check_BluetoothStatus();	
+			//pasa el mChatChatService a la case Manage_BT_Comunication
+			manage_BT.setChatService(mChatService);
+			//pide al Manage_BT_Comunication que cree el BluetoothChatService
+			manage_BT.createBluetoothChatService(this);
+	    }
 
 		//habilita el gps desde el inicio
 		gps.turnGPSOn(this);                 
@@ -305,6 +302,19 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 				manage_BT.connectDevice(data, true);
 			}
 			break;
+		case 3:
+			if (resultCode == Activity.RESULT_OK){
+				manage_BT = new Manage_BT_Comunication(this,mBluetoothAdapter,alertManager,ttSpeech,preferencias,marker);
+				//se comprueba el estado del bluetooth (on/off)
+				manage_BT.check_BluetoothStatus();	
+				//pasa el mChatChatService a la case Manage_BT_Comunication
+				manage_BT.setChatService(mChatService);
+				//pide al Manage_BT_Comunication que cree el BluetoothChatService
+				manage_BT.createBluetoothChatService(this);
+				break;
+			}else {
+				finish();
+			}			
 		}   
 	}
 
