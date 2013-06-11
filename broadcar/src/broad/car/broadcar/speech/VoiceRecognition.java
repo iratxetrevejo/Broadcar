@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import broad.car.broadcar.R;
+import broad.car.broadcar.speech.service.SpeechActivationService;
 /** @addtogroup Broadcar
 *
 * @{
@@ -57,13 +58,12 @@ public class VoiceRecognition extends Activity
    	private String KEY_PREF_CRASHES;
    	private String KEY_PREF_WORKS;
    	private String KEY_PREF_VEHICLE_NO_VISIBLE;
-   		
+   	boolean active;
 	/*********************************************************************
 	 ** 																**
 	 ** LOCAL FUNCTIONS 												**
 	 ** 																**
 	 *********************************************************************/
-    
 	/**********************************************************************
 	 * @brief  onCreate es una funcion que se ejecuta al iniciar la actividad.
 	 * @par	   Logica 
@@ -80,11 +80,10 @@ public class VoiceRecognition extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.voice_recog);
-    	
     	ctx = getApplicationContext(); 
     	prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         commandMatcher = new CommandMatcher(prefs);
-        
+        active = true;
     	KEY_PREF_HEAVY_TRAFFIC = getResources().getText(R.string.KEY_PREF_HEAVY_TRAFFIC).toString();
        	KEY_PREF_LOW_VISIBILITY= getResources().getText(R.string.KEY_PREF_LOW_VISIBILITY).toString();
        	KEY_PREF_ROAD_STATE= getResources().getText(R.string.KEY_PREF_ROAD_STATE).toString();
@@ -155,5 +154,20 @@ public class VoiceRecognition extends Activity
         }
         super.onActivityResult(requestCode, resultCode, data);
       this.finish();
+    }
+    
+    @Override
+    public void onStart() {
+       super.onStart();
+       active = true;
+    } 
+
+    @Override
+    public void onStop() {
+       super.onStop();
+       active = false;
+    }
+    public boolean getActive(){
+    	return this.active;
     }
 }

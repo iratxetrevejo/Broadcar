@@ -17,11 +17,15 @@ package broad.car.broadcar.speech.service;
 
 
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 import broad.car.broadcar.speech.VoiceRecognition;
 
 /**
@@ -50,20 +54,18 @@ public class SpeechActivationService extends Service implements
             "ACTIVATION_RESULT_INTENT_KEY";
     public static final String ACTIVATION_RESULT_BROADCAST_NAME =
             "broad.car.broadcar.speech.service.ACTIVATION";
-
     /**
      * send this when external code wants the Service to stop
      */
     public static final String ACTIVATION_STOP_INTENT_KEY =
             "ACTIVATION_STOP_INTENT_KEY";
-
     public static final int NOTIFICATION_ID = 10298;
-
     private boolean isStarted;
-
     private SpeechActivator activator;
-
-    
+    private int m_interval = 10000; // 10 seconds
+    private Handler m_handler;
+    Intent dialogIntent;
+    VoiceRecognition recog;
 	/*********************************************************************
 	 ** 																**
 	 ** LOCAL FUNCTIONS 												**
@@ -75,23 +77,41 @@ public class SpeechActivationService extends Service implements
     {
         super.onCreate();
         isStarted = false;
+        m_handler = new Handler();
+        activator = SpeechActivatorFactory.createSpeechActivator(this, this, "hola");
+        recog = new VoiceRecognition();
+        dialogIntent = new Intent(getBaseContext(), recog.getClass());
     }
-
-    public static Intent makeStartServiceIntent(Context context,
-            String activationType)
+    
+    public Runnable m_statusChecker = new Runnable()
     {
-        Intent i = new Intent(context, SpeechActivationService.class);
-        i.putExtra(ACTIVATION_TYPE_INTENT_KEY, activationType);
-        return i;
-    }
-
-    public static Intent makeServiceStopIntent(Context context)
+    	
+         @Override 
+         public void run() {
+        	 if(!isStarted){
+        		 if(!recog.getActive()){
+     				activator.detectActivation();   
+     				Toast.makeText(getApplicationContext(),"Say 'Hola'", Toast.LENGTH_LONG).show();
+     				m_handler.postDelayed(m_statusChecker, m_interval);
+     			}	
+        	 }
+         }
+   /*      public void stop(){
+        	 activo=false;
+         }
+         public void start(){
+        	 activo=true;
+         }*/
+    };
+    public void startRepeatingTask()
     {
-        Intent i = new Intent(context, SpeechActivationService.class);
-        i.putExtra(ACTIVATION_STOP_INTENT_KEY, true);
-        return i;
+        m_statusChecker.run(); 
     }
 
+    public void stopRepeatingTask()
+    {
+        m_handler.removeCallbacks(m_statusChecker);
+    }
 
     
 	/**********************************************************************
@@ -111,67 +131,11 @@ public class SpeechActivationService extends Service implements
     {
     	 if (intent != null)
          {
-                 // activator not started, start it
-                 
-                 //Log.d(TAG, "extras: " + intent.getExtras().toString());
-                 if (activator == null)
-                 {
-                     Log.d(TAG, "null activator");
-                 }
-                     
-                 activator = SpeechActivatorFactory.createSpeechActivator(this, this, "hola");
-                 
-                 Log.d(TAG, "started: " + activator.getClass().getSimpleName());
-                 isStarted = true;
-                 activator.detectActivation();
-       
+    		 m_statusChecker.run();       
          }
     	 //You can use START_STICKY to restart the Service if your Serice is killed
          // restart in case the Service gets canceled, use START_REDELIVER_INTENT
          return Service.START_STICKY;
-    }
-
-    private void startDetecting(Intent intent)
-    {
-        Log.d(TAG, "extras: " + intent.getExtras().toString());
-        if (activator == null)
-        {
-            Log.d(TAG, "null activator");
-        }
-            
-        activator = getRequestedActivator(intent);
-        Log.d(TAG, "started: " + activator.getClass().getSimpleName());
-        isStarted = true;
-        activator.detectActivation();
-
-    }
-
-    private SpeechActivator getRequestedActivator(Intent intent)
-    {
-        String type = intent.getStringExtra(ACTIVATION_TYPE_INTENT_KEY);
-        // create based on a type name
-        SpeechActivator speechActivator = SpeechActivatorFactory.createSpeechActivator(this, this, type);
-        return speechActivator;
-    }
-
-    /**
-     * determine if the intent contains an activator type 
-     * that is different than the currently running type
-     */
-    private boolean isDifferentType(Intent intent)
-    {
-        boolean different = false;
-        if (activator == null)
-        {
-            return true;
-        }
-        else
-        {
-            SpeechActivator possibleOther = getRequestedActivator(intent);
-            different = !(possibleOther.getClass().getName().
-                    equals(activator.getClass().getName()));
-        }
-        return different;
     }
 
 	/**********************************************************************
@@ -186,13 +150,13 @@ public class SpeechActivationService extends Service implements
     @Override
     public void activated(boolean success)
     {
-    	Intent dialogIntent = new Intent(getBaseContext(), VoiceRecognition.class);
+    	
     	dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     	getApplication().startActivity(dialogIntent);
-
-       stopActivator();
+        stopActivator();
         // always stop after receive an activation
-       stopSelf();
+        stopSelf();
+
     }
 
     @Override
@@ -200,6 +164,7 @@ public class SpeechActivationService extends Service implements
     {
         Log.d(TAG, "On destroy");
         super.onDestroy();
+        Toast.makeText(getApplicationContext(),"Listen!", Toast.LENGTH_LONG).show();
         stopActivator();
         stopForeground(true);
     }

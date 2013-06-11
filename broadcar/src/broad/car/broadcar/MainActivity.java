@@ -9,6 +9,8 @@ package broad.car.broadcar;
  *********************************************************************/
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +19,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import broad.car.broadcar.alerts.AlertManager;
 import broad.car.broadcar.bluetooth.BluetoothChatService;
 import broad.car.broadcar.bluetooth.Manage_BT_Comunication;
@@ -110,6 +113,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	private String KEY_PREF_LIST_PREF;
 	private String maplistpref;
 
+	boolean activado;
+
+	Intent recog;
 	/*********************************************************************
 	 ** 																**
 	 ** LOCAL FUNCTIONS 												**
@@ -176,7 +182,8 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			//pide al Manage_BT_Comunication que cree el BluetoothChatService
 			manage_BT.createBluetoothChatService(this);
 	    }
-
+	   
+	    recog= new Intent (MainActivity.this, "broad.car.broadcar.speech.service.SpeechActivationService".getClass());
 		//habilita el gps desde el inicio
 		gps.turnGPSOn(this);                 
 	}
@@ -273,8 +280,17 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			startActivityForResult(intent, REQUEST_CONNECT_DEVICE_SECURE);
 			return true;
 		case R.id.menu_speak: //El usuario selecciona la opcion de speech para comenzar con el servicio de deteccion de voz.
-			Intent recog= new Intent (MainActivity.this, SpeechActivationService.class);
-			startService(recog);
+			
+			if(!activado){
+				startService(recog);
+				activado=true;
+					Toast.makeText(getApplicationContext(), "Servicio activado", Toast.LENGTH_SHORT).show();
+				}else{
+					stopService(recog);
+					activado=false;
+					Toast.makeText(getApplicationContext(), "Servicio detenido", Toast.LENGTH_SHORT).show();
+				}			
+			
 			//stopService(new Intent (Main_activity.this, SpeechActivationService.class));
 		default:
 			return super.onOptionsItemSelected(item);
@@ -328,9 +344,6 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	 * @param  SharedPreferences sharedPreferences
 	 * 	@param String key - alerta a activar
 	 * @return
-	 * @TODO Esta funcion es demasiado larga. Aumenta la complejidad por
-	 * 		 lo que habría que refactorizarla.
-
 	 **********************************************************************/		  
 
 	@Override
@@ -360,4 +373,5 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		}
 		marker.addMarkersToMap(); // dibuja en el mapa las alertas activadas
 	}
+	
 }
