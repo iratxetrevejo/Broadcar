@@ -39,7 +39,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 /** @addtogroup Broadcar
  *
  * @{
-
  * @file MainActivity
  * @brief Clase principal del programa
  *
@@ -116,6 +115,11 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	private String KEY_PREF_LIST_PREF;
 	private String maplistpref;
 
+	public static final String KEY_PREF_MAPS_NORMAL="NORMAL";
+	public static final String KEY_PREF_MAPS_HYBRID="HYBRID";
+	public static final String KEY_PREF_MAPS_SATELLITE="SATELLITE";
+	public static final String KEY_PREF_MAPS_TERRAIN="TERRAIN";
+	
 	boolean activado;
 
 	Intent recog;
@@ -228,8 +232,6 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 		preferencias= PreferenceManager.getDefaultSharedPreferences(this);
 		preferencias.registerOnSharedPreferenceChangeListener(this);
     	
-		preferencias = getSharedPreferences("prefereces", Activity.MODE_PRIVATE);
-		preferencias.registerOnSharedPreferenceChangeListener(this);
 		//get the state of the alerts
 		switchHeavy_traffic_pref = preferencias.getBoolean(KEY_PREF_HEAVY_TRAFFIC, true);
 		switchLow_visibility_pref = preferencias.getBoolean(KEY_PREF_LOW_VISIBILITY, true);
