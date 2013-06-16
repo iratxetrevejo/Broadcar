@@ -54,9 +54,9 @@ public class Manage_BT_Comunication {
 	AlertManager alertManager;
 	//encargado de la voz
 	AndroidTextToSpeech ttspeech;
-		
+	//Preferencias compartidas del sistema
 	SharedPreferences preferencesButtons;
-	
+	//Marcadores de los mapas.
 	markers marcadores;
 	/*********************************************************************
 	** 																	**
@@ -415,17 +415,17 @@ public class Manage_BT_Comunication {
 	}
 	
 	
-	  /**
+	  /**************************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para dibujar los marcadores en el mapa.
 	   * @par	updateMap 
 	   *	 		- Actualiza todos los arrays noVisibleVehicle_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	   * @throws IOException 
+	   * @throws InterruptedException 
 	   * @date 	2013-02-26 
-	   */
+	   ****************************************************************/
 	public void all_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException, InterruptedException
 	{
 		//Cambiamos la ultima alerta de trafico denso
@@ -441,17 +441,17 @@ public class Manage_BT_Comunication {
 		//Cambiamos la ultima alerta del estado de la carretera
 		roadstate_Alerts_Update(lista,dlat,dlon);
 	}
-	  /**
+	  /**************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para actualizar la informacion del array.
 	   * @par	updateMap 
 	   *	 		- Actualiza los marcadores del array de heavytraffic_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	   * @throws IOException 
+	   * @throws InterruptedException 
 	   * @date 	2013-02-26 
-	   */			
+	   *************************************************/			
 	public void heavytraffic_Alerts_markUpdate(String[] lista,Double dlat, Double dlon) throws IOException, InterruptedException {
 		
 		//Cambiamos la ultima alerta de trafico denso
@@ -479,16 +479,16 @@ public class Manage_BT_Comunication {
 		}
 
 	}
-	  /**
+	  /**************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para actualizar la informacion del array.
 	   * @par	updateMap 
 	   *	 		- Actualiza los marcadores del array de noVisibleVehicle_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
-	 * @throws IOException 
+	   * @throws IOException 
 	   * @date 	2013-02-26 
-	   */			
+	   *************************************************/			
 	public void noVisibleVehicle_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("2")){
 			
@@ -514,16 +514,16 @@ public class Manage_BT_Comunication {
 		}
 
 	}
-	  /**
+	  /**************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para actualizar la informacion del array.
 	   * @par	updateMap 
 	   *	 		- Actualiza los marcadores del array de works_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
-	 * @throws IOException 
+	   * @throws IOException 
 	   * @date 	2013-02-26 
-	   */
+	   *************************************************/
 	public void works_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("1")){ 
 			
@@ -553,16 +553,16 @@ public class Manage_BT_Comunication {
 		}
 
 	}
-	  /**
+	  /**************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para actualizar la informacion del array.
 	   * @par	updateMap 
 	   *	 		- Actualiza los marcadores del array de crashes_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
-	 * @throws IOException 
+	   * @throws IOException 
 	   * @date 	2013-02-26 
-	   */	
+	   *************************************************/	
 	public void crashes_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("5")){ 
 		
@@ -593,7 +593,7 @@ public class Manage_BT_Comunication {
 
 	
 	}
-	  /**
+	  /**************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para actualizar la informacion del array.
 	   * @par	updateMap 
@@ -602,7 +602,7 @@ public class Manage_BT_Comunication {
 	   * @author Ibon Ortega
 	   * @throws IOException 
 	   * @date 	2013-02-26 
-	   */
+	   *************************************************/
 	public void lowVisibility_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("3")){  
 			
@@ -624,16 +624,16 @@ public class Manage_BT_Comunication {
 
 	
 	}
-	  /**
+	  /**************************************************
 	   * @name	noVisibleVehicle_Alerts
 	   * @brief	Funcion para actualizar la informacion del array.
 	   * @par	updateMap 
 	   *	 		- Actualiza los marcadores del array de roadstate_Alerts.
 	   * @author Iratxe Trevejo
 	   * @author Ibon Ortega
-	 * @throws IOException 
+	   * @throws IOException 
 	   * @date 	2013-02-26 
-	   */	
+	   *************************************************/	
 	public void roadstate_Alerts_Update(String[] lista,Double dlat, Double dlon) throws IOException {
 		if(lista[0].equals("4")){
 			
@@ -661,19 +661,19 @@ public class Manage_BT_Comunication {
 
 	}
 		
-/*********************************************************************
-* @return mHandler
-* @brief  FUunción que devuelve el mHander
-**********************************************************************/	    
+	/*********************************************************************
+	* @return mHandler
+	* @brief  FUunción que devuelve el mHander
+	**********************************************************************/	    
     public Handler getHandler(){
     	return mHandler;
     }
    
 	  
-/*************************************************************
-* @param mBluetoothAdapter 
-* @brief  Conecta dispositivos
-**************************************************************/	
+	/*************************************************************
+	* @param mBluetoothAdapter 
+	* @brief  Conecta dispositivos
+	**************************************************************/	
     public void connectDevice(Intent data, boolean secure) {
         // Get the device MAC address
         String address = data.getExtras()
@@ -686,18 +686,18 @@ public class Manage_BT_Comunication {
 
     
     
-/*************************************************************
-* @param mChatService
-* @brief  Conecta dispositivos
-**************************************************************/	
-	public void setChatService(BluetoothChatService mChatService) {
+	/*************************************************************
+	* @param mChatService
+	* @brief  Conecta dispositivos
+	**************************************************************/	
+		public void setChatService(BluetoothChatService mChatService) {
 		ChatService=mChatService;			
 	}
 
-/*************************************************************
-* @param mainActivity
-* @brief  Crea el objeto BluetoothChatService
-**************************************************************/	
+	/*************************************************************
+	* @param mainActivity
+	* @brief  Crea el objeto BluetoothChatService
+	**************************************************************/	
 	
    public void createBluetoothChatService(MainActivity mainActivity) {
 		if (BluetoothAdapter.isEnabled() && ChatService == null) {

@@ -83,6 +83,7 @@ public class BluetoothChatService {
 	
 	public String DEVICE_NAME;
 	public String TOAST;
+	private int mState;
 	/*********************************************************************
 	** 																	**
 	** IMPORTED CLASSES / Declarations  								**
@@ -95,7 +96,6 @@ public class BluetoothChatService {
     private AcceptThread mInsecureAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-    private int mState;
     Context contexto;
 	
 	/**********************************************************************

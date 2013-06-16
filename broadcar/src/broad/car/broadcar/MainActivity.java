@@ -85,8 +85,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	AndroidTextToSpeech ttSpeech;
 	//Los marcadores
 	markers marker;
-
-
+	Intent recog;
+	//Reconocedor de voz
+	SpeechActivationService speechrecog;
 
 	/*********************************************************************
 	 ** 																**
@@ -114,16 +115,9 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 	private String KEY_PREF_SPEECH_RECOG;
 	private String KEY_PREF_LIST_PREF;
 	private String maplistpref;
-
-	public static final String KEY_PREF_MAPS_NORMAL="NORMAL";
-	public static final String KEY_PREF_MAPS_HYBRID="HYBRID";
-	public static final String KEY_PREF_MAPS_SATELLITE="SATELLITE";
-	public static final String KEY_PREF_MAPS_TERRAIN="TERRAIN";
 	
-	boolean activado;
+	boolean speechRecognizerActivated;
 
-	Intent recog;
-	SpeechActivationService speechrecog;
 	/*********************************************************************
 	 ** 																**
 	 ** LOCAL FUNCTIONS 												**
@@ -371,12 +365,12 @@ public class MainActivity extends android.support.v4.app.FragmentActivity implem
 			mapa.changeMapView(maplistpref);
 		}
 		if (key.equals(KEY_PREF_SPEECH_RECOG)) {
-			if(!activado){
+			if(!speechRecognizerActivated){
 				startService(recog);
-				activado=true;
+				speechRecognizerActivated=true;
 			}else{
 				stopService(recog);
-				activado=false;
+				speechRecognizerActivated=false;
 			}
 		}
 		marker.addMarkersToMap(); // dibuja en el mapa las alertas activadas

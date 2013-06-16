@@ -45,7 +45,7 @@ public class MapGoogle extends Activity implements LocationListener{
 	**********************************************************************/
 	GoogleMap googleMap;
 	LocationManager locationManager;
-	Location loc; //localización
+	Location location; //localización
 	LocationListener locListener;//listener para el cambio de posición
 	CameraUpdate camUpd; // para refrescar el mapa
 	Criteria criteria;
@@ -53,7 +53,7 @@ public class MapGoogle extends Activity implements LocationListener{
 	markers marker;
 
 /**********************************************************************
- * @param marker2 
+ * @param marcador 
  * @brief   Situa el mapa en torno a la localización en la posición
  * en la que esta situada el dispositivo
  * @param  SupportMapFragment fm
@@ -64,12 +64,12 @@ public class MapGoogle extends Activity implements LocationListener{
 **********************************************************************/	
 
 
-	public void init_location(SupportMapFragment fm, LocationManager locationManager, AlertManager alertManager2, markers marker2)
+	public void init_location(SupportMapFragment fragment, LocationManager locationManager, AlertManager alert_manager, markers marcador)
     {
-		marker=marker2;
-		alertManager = alertManager2;
+		marker=marcador;
+		alertManager = alert_manager;
 		// Getting GoogleMap object from the fragment
-        googleMap = fm.getMap();
+        googleMap = fragment.getMap();
         // Enabling MyLocation Layer of Google Map
         googleMap.setMyLocationEnabled(true);
         // Creating a criteria object to retrieve provider
@@ -77,12 +77,12 @@ public class MapGoogle extends Activity implements LocationListener{
          // Getting the name of the best provider
         String provider = locationManager.getBestProvider(criteria, true);
          // Getting Current Location
-        Location loc = locationManager.getLastKnownLocation(provider); 
-        if(loc!=null){
-           onLocationChanged(loc);
+        Location location = locationManager.getLastKnownLocation(provider); 
+        if(location!=null){
+           onLocationChanged(location);
         }        
        //Mostramos la última posición conocida
-       viewLocation(loc);
+       viewLocation(location);
        //Nos registramos para recibir actualizaciones de la posición
        register_forUpdates();  
        locationManager.requestLocationUpdates(

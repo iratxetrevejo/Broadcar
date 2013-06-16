@@ -47,9 +47,9 @@ public class LocationAddress {
 	 * @TODO 
 	**********************************************************************/	
 
-	public String getAddress(double dlat, double dlon) throws IOException{
-		Geocoder gc = new Geocoder(mainContext.getApplicationContext());
-		List<Address> addresses = gc.getFromLocation(dlat, dlon, 1);
+	public String getAddress(double dlatitude, double dlongitude) throws IOException{
+		Geocoder geocoder = new Geocoder(mainContext.getApplicationContext());
+		List<Address> addresses = geocoder.getFromLocation(dlatitude, dlongitude, 1);
 		if (addresses.size() > 0) {
 		Address address = addresses.get(0);
 		addr = address.getAddressLine(0);//consigue la direccion en la que ocurrido la alerta

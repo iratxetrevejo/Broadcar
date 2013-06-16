@@ -32,8 +32,8 @@ public class Alerts {
 	private int id=0;
 	private boolean state=false;
 	private boolean show=false;
-	private double lat;
-	private double lon;
+	private double latitude;
+	private double longitude;
 	private int icon=R.drawable.default_alert_icon;
 	private String key="Alert";
 	
@@ -100,7 +100,7 @@ public class Alerts {
 	 * @TODO 
 	**********************************************************************/
 	public double getLat(){
-		return this.lat;
+		return this.latitude;
 	}
 	
 	/**********************************************************************
@@ -110,7 +110,7 @@ public class Alerts {
 	 * @TODO 
 	**********************************************************************/
 	public double getLon(){
-		return this.lon;
+		return this.longitude;
 	}
 	
 	/**********************************************************************
@@ -176,7 +176,7 @@ public class Alerts {
 	 * @TODO 
 	**********************************************************************/	
 	public void setLat(double lat){
-		this.lat=lat;
+		this.latitude=lat;
 	}
 	
 	
@@ -187,6 +187,6 @@ public class Alerts {
 	 * @TODO 
 	**********************************************************************/	
 	public void setLon(double lon){
-		this.lon=lon;
+		this.longitude=lon;
 	}
 }

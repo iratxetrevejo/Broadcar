@@ -41,7 +41,17 @@ import broad.car.broadcar.speech.VoiceRecognition;
 public class SpeechActivationService extends Service implements
         SpeechActivationListener
 {
-	
+	/*********************************************************************
+	 ** 																**
+	 ** IMPORTED CLASSES / Declarations  								**
+	 ** 																**
+	 **********************************************************************/
+	Intent dialogIntent;
+	VoiceRecognition recog;
+	Context ctx;
+	SharedPreferences pref;
+    private SpeechActivator activator;
+    private Handler m_handler;
 	/*********************************************************************
 	 ** 																**
 	 ** GLOBAL VARIABLES 												**
@@ -49,28 +59,17 @@ public class SpeechActivationService extends Service implements
 	 **********************************************************************/
 	
     private static final String TAG = "SpeechActivationService";
-    public static final String NOTIFICATION_ICON_RESOURCE_INTENT_KEY =
-        "NOTIFICATION_ICON_RESOURCE_INTENT_KEY";
-    public static final String ACTIVATION_TYPE_INTENT_KEY =
-            "ACTIVATION_TYPE_INTENT_KEY";
-    public static final String ACTIVATION_RESULT_INTENT_KEY =
-            "ACTIVATION_RESULT_INTENT_KEY";
-    public static final String ACTIVATION_RESULT_BROADCAST_NAME =
-            "broad.car.broadcar.speech.service.ACTIVATION";
+    public static final String NOTIFICATION_ICON_RESOURCE_INTENT_KEY ="NOTIFICATION_ICON_RESOURCE_INTENT_KEY";
+    public static final String ACTIVATION_TYPE_INTENT_KEY ="ACTIVATION_TYPE_INTENT_KEY";
+    public static final String ACTIVATION_RESULT_INTENT_KEY ="ACTIVATION_RESULT_INTENT_KEY";
+    public static final String ACTIVATION_RESULT_BROADCAST_NAME ="broad.car.broadcar.speech.service.ACTIVATION";
     /**
      * send this when external code wants the Service to stop
      */
-    public static final String ACTIVATION_STOP_INTENT_KEY =
-            "ACTIVATION_STOP_INTENT_KEY";
+    public static final String ACTIVATION_STOP_INTENT_KEY ="ACTIVATION_STOP_INTENT_KEY";
     public static final int NOTIFICATION_ID = 10298;
     private boolean isStarted;
-    private SpeechActivator activator;
     private int m_interval = 10000; // 10 seconds
-    private Handler m_handler;
-    Intent dialogIntent;
-    VoiceRecognition recog;
-    Context ctx;
-    SharedPreferences pref;
  	private String KEY_PREF_SPEECH_RECOG;
  	
 	/*********************************************************************
@@ -107,12 +106,6 @@ public class SpeechActivationService extends Service implements
      			}	
         	 }
          }
-   /*      public void stop(){
-        	 activo=false;
-         }
-         public void start(){
-        	 activo=true;
-         }*/
     };
     public void startRepeatingTask()
     {
@@ -169,7 +162,10 @@ public class SpeechActivationService extends Service implements
         stopSelf();
 
     }
-
+	/**********************************************************************
+	 * @brief  onDestroy se ejecuta cuando la actividad se destruye
+	 * @return
+	 **********************************************************************/
     @Override
     public void onDestroy()
     {
@@ -179,7 +175,10 @@ public class SpeechActivationService extends Service implements
         stopActivator();
         stopForeground(true);
     }
-
+	/**********************************************************************
+	 * @brief  stopActivator se utiliza para detener el activador.
+	 * @return
+	 **********************************************************************/
     private void stopActivator()
     {
         if (activator != null)
